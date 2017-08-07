@@ -54,6 +54,7 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
     'modules'=>[
         'route'=>'deepziyu\yii\rest\module\RouteModule',
         'estate'=>'module\estate\Module',
+        'passport'=>'module\passport\Module',
         'member'=>'module\member\Module'
     ],
     'aliases'=>[
