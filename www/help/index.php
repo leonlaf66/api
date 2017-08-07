@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Wesnail Docs</title>
+    <title>Usleju API Docs</title>
     <link href="themes/md.css" rel="stylesheet">
 </head>
 <body>  
