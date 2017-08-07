@@ -3,7 +3,7 @@ namespace module\passport\controllers;
 
 use module\core\Exception;
 
-class LoginController extends \deepziyu\yii\rest\Controller
+class AccountController extends \deepziyu\yii\rest\Controller
 {   
     /**
      * 会员登陆
@@ -12,7 +12,7 @@ class LoginController extends \deepziyu\yii\rest\Controller
      * @param string $password 登陆密码
      * @return array account 用户授权结果
      */
-    public function actionIndex($username, $password)
+    public function actionLogin($username, $password)
     {
         $user = \common\customer\Account::findByEmail($username);
         if (!$user) {
