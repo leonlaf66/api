@@ -37,8 +37,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
 
     /**
      * 会员注册
-     * @desc 通过email进行会员注册<br/>Post结构:<br/>{"username": null, "email": null, "password": null, "confirm_password": null, accept_agreed: true}
-     * @param json $json 
+     * @desc POST 通过email进行会员注册 <a href="/help/?register-email" target="_blank">查看更多</a>
      * @return boolean account 用户注册结果, 需要验证邮箱地址
      */
     public function actionRegister()
@@ -48,6 +47,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
             $postData = ['RegisterForm' => WS::$app->request->post()];
             $registerForm->load($postData);
             $registerForm->confirm_password = $registerForm->password;
+            $registerForm->accept_agreed = true;
 
             if($registerForm->validate()) {
                 if($user = $registerForm->accountRegister()) {
