@@ -3,6 +3,8 @@ class App extends \common\web\ApiApp
 {
     public $appToken = '';
     public $baseUrl = '/';
+    public $passportUrl = '';
+    public $translationStatus = false;
     public $siteMaps = [
         'ma' => 'MA'
     ];
