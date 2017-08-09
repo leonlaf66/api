@@ -85,7 +85,7 @@ Url参数中附加:
     <div class="help">
         <h2>接口文档</h2>
 <pre>
-<a href="http://api.usleju.cn/route/api" target="_blank">http://api.usleju.cn/route/api/index</a>
+<a href="http://api.usleju.cn/route/api/index" target="_blank">http://api.usleju.cn/route/api/index</a>
 </pre>
     </div>
 
