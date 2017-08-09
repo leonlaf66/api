@@ -112,7 +112,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
     /**
      * 学区选项列表
      * @desc 学区选项列表
-     * @return [] list 学区选项列表
+     * @return object list 学区选项列表
      */
     public function actionMaps()
     {

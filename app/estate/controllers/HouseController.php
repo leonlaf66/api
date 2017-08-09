@@ -72,4 +72,15 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
         return $resuts;
     }
+
+    /**
+     * 房源详情
+     * @desc 房源详情
+     * @param number $id 房源ID
+     * @return object info 房源信息, 查看<a href="/help?house-get-results" target="_blank">Results格式</a>
+     */
+    public function actionGet($id)
+    {
+        return [];
+    }
 }
