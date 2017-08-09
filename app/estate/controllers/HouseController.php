@@ -19,7 +19,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param number $page_size 指定分页大小
      * @return [] list 查询结果, 参照说明中的"Results"
      */
-    public function actionSearch($type = 'purchase', $page = 1, $page_size = 15)
+    public function actionSearch($type = 'purchase', $q = '', $filters = '[]', $order = 0, $page = 1, $page_size = 15)
     {
         // 请求参数
         $req = WS::$app->request;
