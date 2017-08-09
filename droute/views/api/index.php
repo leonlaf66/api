@@ -18,6 +18,16 @@
     <link rel="stylesheet" href="https://staticfile.qnssl.com/semantic-ui/2.1.6/components/message.min.css">
     <link rel="stylesheet" href="https://staticfile.qnssl.com/semantic-ui/2.1.6/components/label.min.css">
     <style>
+        a, a:focus {
+            color:#61BD4F;
+        }
+        a:hover {
+            color:#71CD5F;
+        }
+        a:active {
+            color:#51AD3F;
+        }
+
         /* 布局 */
         .site-tree, .site-content {
             display: inline-block;
@@ -30,7 +40,8 @@
         .site-tree {
             width: 325px;
             min-height: 900px;
-            padding: 5px 0 20px;
+            padding: 5px 0 10px;
+            background:#fff;
         }
 
         .site-content {
@@ -40,13 +51,10 @@
         }
 
         /* 文档 */
-        .site-tree {
-            border-right: 1px solid #eee;
-        }
-
         .site-tree .layui-tree {
             list-style: none;
             line-height: 32px;
+            padding-left: 15px;
         }
 
         .site-tree .layui-tree li i {
@@ -72,10 +80,11 @@
 
         .site-tree .layui-tree li h2 {
             line-height: 36px;
-            border-left: 5px solid #009E94;
+            border-left: 5px solid #ddd;
             margin: 15px 0 5px;
             padding: 0 10px;
             background-color: #f2f2f2;
+            font-size:18px;
         }
 
         .site-tree .layui-tree li ul {
@@ -228,7 +237,7 @@
 
 </head>
 <body>
-<div class="ui r" style="max-width: none !important;">
+<div class="ui r" style="max-width: none !important;position: relative;">
     <div class="site-tree">
         <ul class="layui-tree">
             <?php foreach ($routes as $id => $item): ?>
@@ -244,11 +253,11 @@
         </ul>
     </div>
 
-    <div class="site-content">
+    <div class="site-content" style="position: absolute;left: 340px;right: 35px;width:auto">
         <?php foreach ($routes as $id => $item): ?>
-            <div id="<?= $id ?>">
+            <div id="<?= $id ?>" style="color:#777;max-width:1000px">
                 <?php if (preg_match('/\*$/', $id)): ?>
-                    <h1 class="site-h1"><?= $id ?></h1>
+                    <h1 class="site-h1" style="color:#61BD4F;font-size:24px"><?= $id ?></h1>
                 <?php else: ?>
                     <div class="ui raised segment">
                         <span class="ui red ribbon label"><?= $item['description'] ?></span>
