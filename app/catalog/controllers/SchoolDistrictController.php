@@ -9,7 +9,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
     /**
      * 学区列表
      * @desc 学区列表
-     * @return [] list 学区列表 结构详见<a href="/help?schooldistrict-list-results">Results</a>
+     * @return [] list 学区列表 结构详见<a href="/help?schooldistrict-list-results" target="_blank">Results</a>
      */
     public function actionList()
     {
