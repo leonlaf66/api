@@ -8,6 +8,15 @@
 <style type="text/css">
 body {
     background:#f0f0f0;
+    padding-bottom:30px;
+}
+.message {
+    position:fixed;
+    left:0;bottom:0;width:100%;
+    background:#e40;
+    color:#fff;
+    padding:5px 10px;
+    font-size:12px;
 }
 h1 {
     font-size:20px;
@@ -26,6 +35,10 @@ a {color:#f20;}
 </style>
 </head>
 <body>
+<div class="message">
+    ** 强烈建议使用Google Chrome浏览器进行API测试，并安装 ModHeader 以及 JSONView 两个扩展, 并配置ModHeader的app-token及lanugage参数.
+</div>
+
     <h1>Usleju API使用说明 <span>(注意: 该API仅供Usleju内部访用，非开放!)</span></h1>
 
     <div class="help">
@@ -86,5 +99,6 @@ Url参数中附加:
 }
 </pre>
     </div>
+
 </body>
 <?php endif?>

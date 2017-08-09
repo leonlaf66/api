@@ -28,6 +28,19 @@
             color:#51AD3F;
         }
 
+        body {
+            padding-bottom:30px;
+        }
+        .message {
+            position:fixed;
+            left:0;bottom:0;width:100%;
+            background:#e40;
+            color:#fff;
+            padding:5px 10px;
+            font-size:12px;
+            z-index:9999999999;
+        }
+
         /* 布局 */
         .site-tree, .site-content {
             display: inline-block;
@@ -237,7 +250,10 @@
 
 </head>
 <body>
-<div class="ui r" style="max-width: none !important;position: relative;">
+<div class="message">
+    ** 强烈建议使用Google Chrome浏览器进行API测试，并安装 ModHeader 以及 JSONView 两个扩展, 并配置ModHeader的app-token及lanugage参数.
+</div>
+<div class="ui r" style="max-width: none !important;position: relative;z-index:0;">
     <div class="site-tree">
         <ul class="layui-tree">
             <?php foreach ($routes as $id => $item): ?>
@@ -253,7 +269,7 @@
         </ul>
     </div>
 
-    <div class="site-content" style="position: absolute;left: 340px;right: 35px;width:auto">
+    <div class="site-content" style="position: absolute;left: 340px;right: 35px;width:auto;z-index:0">
         <?php foreach ($routes as $id => $item): ?>
             <div id="<?= $id ?>" style="color:#777;max-width:1000px">
                 <?php if (preg_match('/\*$/', $id)): ?>
@@ -262,7 +278,12 @@
                     <div class="ui raised segment">
                         <span class="ui red ribbon label"><?= $item['description'] ?></span>
                         <div class="ui message">
-                            <p>接口链接：<?= $item['id'] ?></p>
+                            <p>
+                                接口链接：<?= $item['id'] ?>
+                                <?php if($item['method'] === 'GET'):?>
+                                    <a href="<?= $item['id'] ?>" target="_blank" style="color:#e20">➥</a>
+                                <?php endif?>
+                            </p>
                             <p>请求方式：<?= $item['method']?></p>
                             <p>说明：<?= $item['descComment'] ?></p>
                         </div>
@@ -279,6 +300,17 @@
                                 </thead>
                                 <tbody>
                                 <?php foreach ($item['request'] as $param): ?>
+                                    <?php
+                                        $nameExprs = explode(':', $param['name']);
+                                        if (count($nameExprs) === 2) {
+                                            $param['name'] = $nameExprs[0];
+                                            if ($nameExprs[1] === 'f') {
+                                                $param['require'] = false;
+                                            } if ($nameExprs[1] === 't') {
+                                                $param['require'] = true;
+                                            }
+                                        }
+                                    ?>
                                     <tr>
                                         <td><?= $param['name'] ?></td>
                                         <td><?= $param['type'] ?></td>

@@ -69,5 +69,14 @@ return [
                 ]);
             }
         }
+    },
+    'school_district' => function ($townCode, $search) {
+        $search->query->andWhere(['in', 'town', explode('/', strtoupper($townCode)]));
+    },
+    'subway_line' => function ($lineId, $search) {
+        $search->query->andWhere(['@>', 'subway_lines', '{'.strtoupper($lineId).'}']);
+    },
+    'subway_stations' => function ($stationIds, $search) {
+        $search->query->andWhere(['&&', 'subway_stations', '{'.implode(',', $stationIds).'}']);
     }
 ];
