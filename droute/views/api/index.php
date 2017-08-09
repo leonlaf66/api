@@ -254,7 +254,7 @@
                         <span class="ui red ribbon label"><?= $item['description'] ?></span>
                         <div class="ui message">
                             <p>接口链接：<?= $item['id'] ?></p>
-                            <p>请求方式: <?= $item['method']?></p>
+                            <p>请求方式：<?= $item['method']?></p>
                             <p>说明：<?= $item['descComment'] ?></p>
                         </div>
                         <?php if(count($item['request']) > 0):?>

@@ -10,7 +10,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
 {   
     /**
      * 房源搜索
-     * @desc GET 房源搜索
+     * @desc 房源搜索
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(按中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
