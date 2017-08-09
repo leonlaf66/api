@@ -12,7 +12,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
      * @desc 通过email+password进行登陆
      * @param string $username 登陆用户名(邮箱地址)
      * @param string $password 登陆密码
-     * @return array account 用户授权结果
+     * @return [] account 用户授权结果
      */
     public function actionLogin($username, $password)
     {
@@ -37,7 +37,8 @@ class AccountController extends \deepziyu\yii\rest\Controller
 
     /**
      * 会员注册
-     * @desc POST 通过email进行会员注册 <a href="/help/?register-email" target="_blank">查看更多</a>
+     * @method POST
+     * @desc 通过email进行会员注册 <a href="/help/?register-email" target="_blank">查看更多</a>
      * @return boolean account 用户注册结果, 需要验证邮箱地址
      */
     public function actionRegister()
