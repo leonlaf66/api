@@ -12,7 +12,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * 房源搜索
      * @desc 房源搜索
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
-     * @param string $q 搜索关键词(按中/英文城市名, zipcode, 房源号, 以及全文搜索)
+     * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
      * @param number $order 排序(1:价格升,2:价格降,3:房间数降,4:房间数升,默认:发布时间降)
      * @param number $page 指定的分页
