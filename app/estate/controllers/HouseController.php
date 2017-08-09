@@ -5,6 +5,7 @@ use WS;
 use common\estate\RetsIndex;
 use module\estate\helpers\SearchGeneral;
 use common\estate\helpers\Rets as RetsHelper;
+use module\estate\helpers\Detail as DetailHelper;
 
 class HouseController extends \deepziyu\yii\rest\Controller
 {   
@@ -81,6 +82,30 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function actionGet($id)
     {
-        return [];
+        $rets = \common\estate\Rets::findOne($id);
+        
+        if(is_null($rets )) {
+            throw new \yii\web\HttpException(404, "Page not found");
+        }
+
+        $render = $rets->render();
+
+        return [
+            'id' => $rets->list_no,
+            'location' => $rets->getLocation(),
+            'list_price' => $rets->list_price,
+            'prop_type_name' => $render->get('prop_type_name')['value'],
+            strtolower($rets->prop_type).'_type_name' => $render->get(strtolower($rets->prop_type).'_type_name')['value'],
+            'no_bedrooms' => $rets->no_bedrooms,
+            'no_full_baths' => $rets->no_full_baths,
+            'no_half_baths' => $rets->no_half_baths,
+            'square_feet' => $rets->square_feet,
+            'latitude' => $rets->latitude,
+            'longitude' => $rets->longitude,
+            'images' => $rets->getPhotos(),
+            'roi' => DetailHelper::fetchRoi($rets),
+            'details' => DetailHelper::fetchDetail($rets),
+            'recommend_houses' => DetailHelper::fetchRecommends($rets)
+        ];
     }
 }

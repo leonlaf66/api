@@ -12,7 +12,9 @@ class App extends \common\web\ApiApp
 
     public function bootstrap()
     {
-        $this->authAppToken();
+        if ($_SERVER['REQUEST_URI'] != '/route/api/index') {
+            $this->authAppToken();
+        }
         $this->initSite();
         parent::bootstrap();
     }
