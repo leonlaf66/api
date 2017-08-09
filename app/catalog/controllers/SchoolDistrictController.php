@@ -89,6 +89,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
                 'average_price' => $item->getSummary('average-price'),
             ],
             'image' => media_url('school-area/images').'/'.str_replace('/', '&', strtoupper($item->code)).'.jpg',
+            'k12' => [],
             'hot_houses' => $houses
         ], (array)json_decode($item->json));
 
