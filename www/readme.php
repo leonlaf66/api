@@ -77,7 +77,7 @@ http://api.usleju.cn/
 <pre>
 Url参数中附加:
 {
-    "access-token": "用户access-token的值" // 该access-token需要从用户登陆接口中获取
+    "access-token": "WODjh82TU7fIk09ydADVfEv56K5ernLS" // 该access-token需要从用户登陆接口结果中获取, 此处WODjh82TU7fIk09ydADVfEv56K5ernLS可直接用于测试
 }
 </pre>
     </div>
