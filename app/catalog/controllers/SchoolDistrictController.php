@@ -18,13 +18,17 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
         $houseSummeryTotal = 0;
         $items = array_map(function ($d) use (& $houseSummeryTotal) {
             $houseSummeryTotal += $d->getSummary('total');
+            $averagePrice = $d->getSummary('average-price');
+            $averagePrice = tt('$'.$averagePrice, number_format(str_replace(',', '', $averagePrice) / 10000.0, 1).'万美元');
+            $avgIncome = $d->special->special2;
+            $avgIncome = tt('$'.$avgIncome, number_format(str_replace(',', '', $avgIncome) / 10000.0, 1).'万美元');
 
             return [
                 'id' => $d->id,
                 'code' => strtolower($d->code),
                 'summary' => [
                     'house_total' => $d->getSummary('total'),
-                    'average_price' => $d->getSummary('average-price'),
+                    'average_price' => $averagePrice,
                 ],
                 'name' => $d->getItemData('name'),
                 'image' => media_url('school-area/images').'/'.str_replace('/', '&', strtoupper($d->code)).'.jpg',
@@ -34,7 +38,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
                 'k12' => $d->k12,
                 'student_num' => $d->special->special1,
                 'government_subsidies' => $d->special->special3,
-                'avg_income' => $d->special->special2,
+                'avg_income' => $avgIncome,
                 'racial' => $d->racials
             ];
         }, $items);
@@ -106,6 +110,11 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
             $item['special']->$newField = $item['special']->$field;
             unset($item['special']->$field);
         }
+
+        $item['summary']['average_price'] = tt('$'.$item['summary']['average_price'], 
+            number_format(str_replace(',', '', $item['summary']['average_price']) / 10000.0, 1).'万美元');
+        $item['special']->avg_income = tt('$'.$item['special']->avg_income, 
+            number_format(str_replace(',', '', $item['special']->avg_income) / 10000.0, 1).'万美元');
 
         return $item;
     }

@@ -51,6 +51,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         // 构造结果
         $items = [];
         foreach ($results as $rets) {
+            $r = $rets->render();
             $items[$rets->list_no] = [
                 'location' => $rets->location,
                 'image' => $rets->getPhoto(0, 800, 800),
@@ -62,7 +63,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'no_full_baths' => intval($rets->no_full_baths),
                 'no_half_baths' => intval($rets->no_half_baths),
                 'square_feet' => intval($rets->square_feet),
-                'list_price' => floatval($rets->list_price),
+                'list_price' => $r->get('list_price')['formatedValue'],
                 'prop_type_name' => $rets->propTypeName(),
                 'status_name' => $rets->statusName(),
                 'list_days_description' => $rets->getListDaysDescription(),
@@ -103,13 +104,13 @@ class HouseController extends \deepziyu\yii\rest\Controller
         return [
             'id' => $rets->list_no,
             'location' => $rets->getLocation(),
-            'list_price' => $rets->list_price,
+            'list_price' => $render->get('list_price')['formatedValue'],
             'prop_type_name' => $render->get('prop_type_name')['value'],
             strtolower($rets->prop_type).'_type_name' => $render->get(strtolower($rets->prop_type).'_type_name')['value'],
             'no_bedrooms' => $rets->no_bedrooms,
             'no_full_baths' => $rets->no_full_baths,
             'no_half_baths' => $rets->no_half_baths,
-            'square_feet' => $rets->square_feet,
+            'square_feet' => $render->get('square_feet')['formatedValue'],
             'latitude' => $rets->latitude,
             'longitude' => $rets->longitude,
             'images' => $rets->getPhotos(),
