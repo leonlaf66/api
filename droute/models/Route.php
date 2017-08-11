@@ -45,6 +45,7 @@ class Route extends \deepziyu\yii\rest\models\Route
                         'method' => 'GET',
                         'descComment' => '//请使用@desc 注释',
                         'request' => [],
+                        'posts' => [],
                         'response' => [],
                     ];
                     $docComment = $method->getDocComment();
@@ -104,6 +105,45 @@ class Route extends \deepziyu\yii\rest\models\Route
                                 }
                             }
                             $result[$id]['request'][] = $params;
+                            continue;
+                        }
+
+                        //@data注释
+                        $pos = stripos($comment, '@data');
+                        if ($pos !== false) {
+                            $params = [
+                                'name' => '',
+                                'type' => '',
+                                'require' => true,
+                                'default' => '',
+                                'other' => '',
+                                'desc' => ''
+                            ];
+                            $paramCommentArr = explode(' ', substr($comment, $pos + 6));
+                            if (preg_match('/\$[A-Z0-9]*/', @$paramCommentArr[1])) {
+                                $params['name'] = substr($paramCommentArr[1], 1);
+                                $params['type'] = $paramCommentArr[0];
+                                foreach ($paramCommentArr as $k => $v) {
+                                    if ($k < 2) {
+                                        continue;
+                                    }
+                                    $params['desc'] .= $v.' ';
+                                }
+                                foreach ($method->getParameters() as $item) {
+                                    if ($item->getName() !== $params['name']) {
+                                        continue;
+                                    }
+                                    $params['require'] = !$item->isDefaultValueAvailable();
+                                    if (!$params['require']) {
+                                        $params['default'] = $item->getDefaultValue();
+                                    }
+                                }
+                                if (preg_match('/\((.*)\)/', $params['name'], $match)) {
+                                    $params['name'] = preg_replace('/\(.*\)/', '', $params['name']);
+                                    $params['default'] = $match[1];
+                                }
+                            }
+                            $result[$id]['posts'][] = $params;
                             continue;
                         }
 

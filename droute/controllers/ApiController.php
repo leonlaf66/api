@@ -33,8 +33,27 @@ class ApiController extends Controller
             }
         }
         $routes = array_reverse($routes);
+
+        $sorts = include(dirname(__DIR__).'/etc/sorts.php');
+        $diffArr = array_diff(array_keys($routes), $sorts);
+        if (count($diffArr) > 0) {
+            echo '<h2>未加入到队列中的路由:</h2><pre>';
+            foreach ($diffArr as $item) {
+                echo "\"{$item}\"<br/>";
+            }
+            echo '</pre>';
+            exit;
+        }
+
+        $sortedRoutes = [];
+        foreach($sorts as $idx=>$id) {
+            if (isset($routes[$id])) {
+                $sortedRoutes[$id] = $routes[$id];
+            }
+        }
+
         return $this->renderPartial('index',[
-            'routes'=>$routes
+            'routes'=>$sortedRoutes
         ]);
     }
 

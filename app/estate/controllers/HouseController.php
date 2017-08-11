@@ -9,6 +9,16 @@ use module\estate\helpers\Detail as DetailHelper;
 
 class HouseController extends \deepziyu\yii\rest\Controller
 {   
+    public $enableAuth = true;
+
+    /** 
+     * list 无需登陆验证
+     */
+    public function authOptional()
+    {
+        return ['search', 'get'];
+    }
+
     /**
      * 房源搜索
      * @desc 房源搜索
@@ -107,5 +117,48 @@ class HouseController extends \deepziyu\yii\rest\Controller
             'details' => DetailHelper::fetchDetail($rets),
             'recommend_houses' => DetailHelper::fetchRecommends($rets)
         ];
+    }
+
+    /**
+     * 房源收藏
+     * @desc 添加或取消房源到收藏夹, 需要事先登陆
+     * @param number $id 房源ID
+     * @return object info
+     */
+    public function actionFavorite($id)
+    {
+        return \common\customer\RetsFavorite::addOrRemove($id, WS::$app->user->id);
+    }
+
+    /**
+     * 看房预约
+     * @method POST
+     * @desc 新增看房预约, 需要事先登陆
+     * @param number $id 房源ID
+     * @data date $day 日期(天), 格式为yyyy-mm-dd，如"2018-12-24"
+     * @data time $time_start 开始时间(精确到分), 格式为hh-MM，如"14:30"表过下午2点30分
+     * @data time $time_end 结束时间(精确到分), 格式如上
+     * @return bool/errors info 成功与否 或 错误信息
+     */
+    public function actionTour($id)
+    {
+        $req = WS::$app->request;
+
+        $result = false;
+
+        if($req->isPost) {
+            $tour = new \common\estate\gotour\Tour();
+            $tour->user_id = WS::$app->user->id;
+            $tour->list_no = $id;
+            $tour->date_start = $req->post('day').' '.$req->post('time_start') . ':00';
+            $tour->date_end = $req->post('day').' '.$req->post('time_end') . ':00';
+            if ($tour->validate()) {
+                $result = $tour->save();
+            } else {
+                return $tour->getErrors();
+            }
+        }
+
+        return $result;
     }
 }

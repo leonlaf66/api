@@ -38,7 +38,10 @@ class AccountController extends \deepziyu\yii\rest\Controller
     /**
      * 会员注册
      * @method POST
-     * @desc 通过email进行会员注册 <a href="/help/?register-email" target="_blank">查看更多</a>
+     * @desc 通过email进行会员注册
+     * @data string $username 用户名
+     * @data string $email 邮箱地址
+     * @data string $password 用户密码
      * @return boolean account 用户注册结果, 需要验证邮箱地址
      */
     public function actionRegister()

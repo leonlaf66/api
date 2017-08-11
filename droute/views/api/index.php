@@ -322,11 +322,46 @@
                                 </tbody>
                             </table>
                         <?php endif?>
+                        <?php if(count($item['posts']) > 0):?>
+                            <table class="ui red celled striped table" style="border-top-color:#f90;">
+                                <thead>
+                                <tr>
+                                    <th>POST参数</th>
+                                    <th>类型</th>
+                                    <th>是否必须</th>
+                                    <th>默认值</th>
+                                    <th>说明</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($item['posts'] as $param): ?>
+                                    <?php
+                                        $nameExprs = explode(':', $param['name']);
+                                        if (count($nameExprs) === 2) {
+                                            $param['name'] = $nameExprs[0];
+                                            if ($nameExprs[1] === 'f') {
+                                                $param['require'] = false;
+                                            } if ($nameExprs[1] === 't') {
+                                                $param['require'] = true;
+                                            }
+                                        }
+                                    ?>
+                                    <tr>
+                                        <td><?= $param['name'] ?></td>
+                                        <td><?= $param['type'] ?></td>
+                                        <td><?= $param['require'] ? '是' : '否' ?></td>
+                                        <td><?= json_encode($param['default']) ?></td>
+                                        <td><?= $param['desc'] ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php endif?>
                         <?php if (count($item['response']) > 0):?>
                             <table class="ui blue celled striped table">
                                 <thead>
                                 <tr>
-                                    <th>类型</th>
+                                    <th>返回类型</th>
                                     <th>说明</th>
                                 </tr>
                                 </thead>

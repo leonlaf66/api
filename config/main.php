@@ -34,7 +34,7 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
         ],
         'user' => [
             'identityClass' => '\common\customer\UserIdentity',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
             'loginUrl'=>''
         ],
         'request' => [
@@ -54,8 +54,8 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
     ],
     'modules'=>[
         'route'=>'droute\RouteModule',
-        'catalog'=>'module\catalog\Module',
         'estate'=>'module\estate\Module',
+        'catalog'=>'module\catalog\Module',
         'passport'=>'module\passport\Module',
         'member'=>'module\member\Module'
     ],
