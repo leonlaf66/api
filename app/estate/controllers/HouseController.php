@@ -62,7 +62,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'no_bedrooms' => intval($rets->no_bedrooms),
                 'no_full_baths' => intval($rets->no_full_baths),
                 'no_half_baths' => intval($rets->no_half_baths),
-                'square_feet' => intval($rets->square_feet),
+                'square_feet' => $r->get('square_feet')['formatedValue'],
                 'list_price' => $r->get('list_price')['formatedValue'],
                 'prop_type_name' => $rets->propTypeName(),
                 'status_name' => $rets->statusName(),
