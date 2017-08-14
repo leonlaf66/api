@@ -23,6 +23,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 房源搜索
      * @desc 房源搜索
+     * @param string $area_id 区域id
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
@@ -31,7 +32,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param number $page_size 指定分页大小
      * @return [] - 查询结果, 查看<a href="/help?house-search-results" target="_blank">Results格式</a>
      */
-    public function actionSearch($type = 'purchase', $q = '', $order = 0, $page = 1, $page_size = 15)
+    public function actionSearch($area_id = 'ma', $type = 'purchase', $q = '', $order = 0, $page = 1, $page_size = 15)
     {
         // 请求参数
         $req = WS::$app->request;
@@ -89,13 +90,14 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 地图房源搜索
      * @desc 地图房源搜索
+     * @param string $area_id 区域id
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
      * @return [] items 查询结果
      * @return [] polygons 区域边界
      */
-    public function actionMapSearch($type = 'purchase', $q = '')
+    public function actionMapSearch($area_id = 'ma', $type = 'purchase', $q = '')
     {
         // 请求参数
         $req = WS::$app->request;
@@ -240,10 +242,11 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
     /**
      * 搜索选项待选列表
+     * @param string $area_id 区域id
      * @desc 搜索选项待选列表
      * @return [] - 待选列表
      */
-    public function actionSearchOptions()
+    public function actionSearchOptions($area_id = 'ma')
     {
         $resultItems = [];
 

@@ -9,6 +9,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
     /**
      * 新闻首页
      * @desc 新闻首页
+     * @param string $area_id 区域ID
      * @param number $type_id 类型id
      * @param number $simple 是否返回简单结果, 0: 较完整, 1:简单
      * @param number $only_infomaion 是否仅仅资讯
@@ -19,7 +20,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
      * @return number total 新闻总数
      * @return [] items 新闻集合
      */
-    public function actionList($type_id = 0, $simple = '0', $only_infomaion = '0', $only_hot = '0', $content_len=200, $page = 1, $page_size = 15)
+    public function actionList($area_id = 'ma', $type_id = 0, $simple = '0', $only_infomaion = '0', $only_hot = '0', $content_len=200, $page = 1, $page_size = 15)
     {
         $search = News::search();
         $search->query->andWhere(['=', 'status', '1']);
@@ -87,9 +88,10 @@ class NewsController extends \deepziyu\yii\rest\Controller
     /**
      * 新闻类型列表
      * @desc 新闻类型列表
+     * @param string $area_id 区域ID
      * @return [] - 列表
      */
-    public function actionTypes()
+    public function actionTypes($area_id = 'ma')
     {
         return \common\core\TaxonomyTerm::typeOptions(3);
     }

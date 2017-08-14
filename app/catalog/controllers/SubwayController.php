@@ -9,9 +9,10 @@ class SubwayController extends \deepziyu\yii\rest\Controller
     /**
      * 地铁选项列表
      * @desc 地铁选项列表
+     * @param string $area_id 区域id
      * @return [] - 地铁选项列表
      */
-    public function actionMaps()
+    public function actionMaps($area_id = 'ma')
     {
         $items = \common\catalog\subway\Station::dictOptions();
 

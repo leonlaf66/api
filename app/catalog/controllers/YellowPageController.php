@@ -9,6 +9,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
     /**
      * 黄页列表
      * @desc 黄页列表
+     * @param string $area_id 区域id
      * @param number $city_id 城市id
      * @param number $type_id 类型id
      * @param number $page:f
@@ -16,7 +17,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      * @return number total 黄页总数
      * @return [] items 黄页结果集合
      */
-    public function actionList($page = 1, $page_size = 25, $city_id = '', $type_id='')
+    public function actionList($area_id = 'ma', $page = 1, $page_size = 25, $city_id = '', $type_id='')
     {
         $search = YellowPage::search();
 
@@ -105,9 +106,10 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
     /**
      * 黄页类型列表获取
+     * @param string $area_id 区域id
      * @return [] - 类型集合
      */
-    public function actionTypes()
+    public function actionTypes($area_id = 'ma')
     {
         $items = \common\core\TaxonomyTerm::typeOptions(2);
         return array_map(function ($d) {
@@ -117,9 +119,10 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
     /**
      * 黄页城市列表获取
+     * @param string $area_id 区域id
      * @return [] - 城市集合
      */
-    public function actionCities()
+    public function actionCities($area_id = 'ma')
     {
         return \common\catalog\Town::mapOptions();
     }

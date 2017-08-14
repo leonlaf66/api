@@ -9,11 +9,12 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
     /**
      * 学区列表
      * @desc 学区列表
+     * @param string $area_id 区域ID
      * @return total 学区总数
      * @return items 学区集合 结构详见<a href="/help?schooldistrict-list-results" target="_blank">Results</a>
      * @return summery 汇总
      */
-    public function actionList()
+    public function actionList($area_id = 'ma')
     {
         $items = SchoolDistrict::xFind()->all();
 
@@ -124,9 +125,10 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
     /**
      * 学区选项列表
      * @desc 学区选项列表
+     * @param string $area_id 区域ID
      * @return object - 学区选项列表
      */
-    public function actionMaps()
+    public function actionMaps($area_id = 'ma')
     {
         $items = SchoolDistrict::xFind()->all();
 
