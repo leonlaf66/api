@@ -4,6 +4,7 @@ namespace module\estate\controllers;
 use WS;
 use common\estate\RetsIndex;
 use module\estate\helpers\SearchGeneral;
+use module\estate\helpers\SearchMap;
 use common\estate\helpers\Rets as RetsHelper;
 use module\estate\helpers\Detail as DetailHelper;
 
@@ -16,7 +17,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function authOptional()
     {
-        return ['search', 'get'];
+        return ['search', 'map-search', 'get', 'search-options', 'school-district-options'];
     }
 
     /**
@@ -86,12 +87,67 @@ class HouseController extends \deepziyu\yii\rest\Controller
     }
 
     /**
+     * 地图房源搜索
+     * @desc 地图房源搜索
+     * @param string $type 售房:purchase, 租房: lease, 默认为售房
+     * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
+     * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
+     * @return [] list 查询结果+区域边界
+     */
+    public function actionMapSearch($type = 'purchase', $q = '')
+    {
+        // 请求参数
+        $req = WS::$app->request;
+
+        // search对象
+        $search = RetsIndex::search();
+
+        // 搜索参数应用
+        $townCodes = SearchMap::apply($req, $search);
+
+        // 限制总返回数量
+        $search->query->limit(4000);
+
+        // 获取真实结果
+        $search->query->select('id, list_price, prop_type, latitude, longitude');
+        $results = $search->query->all();
+
+        // 构造结果
+        $items = [];
+        foreach ($results as $d) {
+            $items[] = implode('|', [
+                $d->id,
+                $d->list_price * 1.0 / 10000,
+                $d->prop_type,
+                $d->latitude,
+                $d->longitude
+            ]);
+        }
+
+        // 构造城市areas
+        $polygons = [];
+        if (! empty($townCodes)) {
+            foreach ($townCodes as $code) {
+                $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$code])->one()->name);
+                $polygons = array_merge($polygons, \common\estate\helpers\Config::get('map.city.polygon/'.$cityId));
+            }
+        }
+
+        // 返回
+        return [
+            'items' => $items,
+            'polygons' => $polygons
+        ];
+    }
+
+    /**
      * 房源详情
      * @desc 房源详情
      * @param number $id 房源ID
+     * @param number $simple 是否仅返回简单信息, 1 简单 0 全全 
      * @return object info 房源信息, 查看<a href="/help?house-get-results" target="_blank">Results格式</a>
      */
-    public function actionGet($id)
+    public function actionGet($id, $simple = '0')
     {
         $rets = \common\estate\Rets::findOne($id);
         
@@ -101,23 +157,41 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
         $render = $rets->render();
 
-        return [
-            'id' => $rets->list_no,
-            'location' => $rets->getLocation(),
-            'list_price' => $render->get('list_price')['formatedValue'],
-            'prop_type_name' => $render->get('prop_type_name')['value'],
-            strtolower($rets->prop_type).'_type_name' => $render->get(strtolower($rets->prop_type).'_type_name')['value'],
-            'no_bedrooms' => $rets->no_bedrooms,
-            'no_full_baths' => $rets->no_full_baths,
-            'no_half_baths' => $rets->no_half_baths,
-            'square_feet' => $render->get('square_feet')['formatedValue'],
-            'latitude' => $rets->latitude,
-            'longitude' => $rets->longitude,
-            'images' => $rets->getPhotos(),
-            'roi' => DetailHelper::fetchRoi($rets),
-            'details' => DetailHelper::fetchDetail($rets),
-            'recommend_houses' => DetailHelper::fetchRecommends($rets)
-        ];
+        if ($simple === '0') {
+            return [
+                'id' => $rets->list_no,
+                'location' => $rets->getLocation(),
+                'list_price' => $render->get('list_price')['formatedValue'],
+                'prop_type_name' => $render->get('prop_type_name')['value'],
+                strtolower($rets->prop_type).'_type_name' => $render->get(strtolower($rets->prop_type).'_type_name')['value'],
+                'no_bedrooms' => $rets->no_bedrooms,
+                'no_full_baths' => $rets->no_full_baths,
+                'no_half_baths' => $rets->no_half_baths,
+                'square_feet' => $render->get('square_feet')['formatedValue'],
+                'status_name' => $rets->statusName(),
+                'list_days_description' => $rets->getListDaysDescription(),
+                'latitude' => $rets->latitude,
+                'longitude' => $rets->longitude,
+                'images' => $rets->getPhotos(),
+                'roi' => DetailHelper::fetchRoi($rets),
+                'details' => DetailHelper::fetchDetail($rets),
+                'recommend_houses' => DetailHelper::fetchRecommends($rets)
+            ];
+        } else {
+            return [
+                'id' => $rets->list_no,
+                'location' => $rets->getLocation(),
+                'list_price' => $render->get('list_price')['formatedValue'],
+                'prop_type_name' => $render->get('prop_type_name')['value'],
+                'no_bedrooms' => $rets->no_bedrooms,
+                'no_full_baths' => $rets->no_full_baths,
+                'no_half_baths' => $rets->no_half_baths,
+                'square_feet' => $render->get('square_feet')['formatedValue'],
+                'status_name' => $rets->statusName(),
+                'list_days_description' => $rets->getListDaysDescription(),
+                'image' => $rets->getPhoto()
+            ];
+        }
     }
 
     /**
@@ -161,5 +235,46 @@ class HouseController extends \deepziyu\yii\rest\Controller
         }
 
         return $result;
+    }
+
+    /**
+     * 搜索选项待选列表
+     * @desc 搜索选项待选列表
+     * @return [] $list 待选列表
+     */
+    public function actionSearchOptions()
+    {
+        $resultItems = [];
+
+        $towns = \common\catalog\Town::find()->where([
+            'state'=>'MA'
+        ])->all();
+
+        foreach ($towns as $town) {
+            $resultItems[] = [
+                'title' => $town->name,
+                'desc' => $town->name_cn.',MA'
+            ];
+            
+            if ($town->name_cn) {
+                $resultItems[] = [
+                    'title' => $town->name_cn,
+                    'desc' => $town->name.',MA'
+                ];
+            }
+        }
+
+        $zipcodes = \common\catalog\Zipcode::find()->where([
+            'state'=>'MA'
+        ])->all();
+
+        foreach ($zipcodes as $zipcode) {
+            $resultItems[] = [
+                'title' => $zipcode->zip,
+                'desc' => $zipcode->city_name.','.$zipcode->city_name_cn.',MA'
+            ];
+        }
+
+        return $resultItems;
     }
 }

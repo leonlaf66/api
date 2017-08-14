@@ -5,6 +5,8 @@ return [
     "/estate/area/list",
     "/estate/house/*",
     "/estate/house/search",
+    "/estate/house/map-search",
+    "/estate/house/search-options",
     "/estate/house/get",
     "/estate/house/favorite",
     "/estate/house/tour",

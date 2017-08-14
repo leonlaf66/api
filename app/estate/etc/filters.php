@@ -71,7 +71,9 @@ return [
         }
     },
     'school_district' => function ($townCode, $search) {
-        $search->query->andWhere(['in', 'town', explode('/', strtoupper($townCode))]);
+        $townCodes = explode('/', strtoupper($townCode));
+        $search->query->andWhere(['in', 'town', $townCodes]);
+        return $townCodes;
     },
     'subway_line' => function ($lineId, $search) {
         $search->query->andWhere(['@>', 'subway_lines', '{'.strtoupper($lineId).'}']);
