@@ -29,7 +29,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param number $order 排序(1:价格升,2:价格降,3:房间数降,4:房间数升,默认:发布时间降)
      * @param number $page 指定的分页
      * @param number $page_size 指定分页大小
-     * @return [] list 查询结果, 查看<a href="/help?house-search-results" target="_blank">Results格式</a>
+     * @return [] - 查询结果, 查看<a href="/help?house-search-results" target="_blank">Results格式</a>
      */
     public function actionSearch($type = 'purchase', $q = '', $order = 0, $page = 1, $page_size = 15)
     {
@@ -92,7 +92,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
-     * @return [] list 查询结果+区域边界
+     * @return [] items 查询结果
+     * @return [] polygons 区域边界
      */
     public function actionMapSearch($type = 'purchase', $q = '')
     {
@@ -145,7 +146,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @desc 房源详情
      * @param number $id 房源ID
      * @param number $simple 是否仅返回简单信息, 1 简单 0 全全 
-     * @return object info 房源信息, 查看<a href="/help?house-get-results" target="_blank">Results格式</a>
+     * @return object - 房源信息, 查看<a href="/help?house-get-results" target="_blank">Results格式</a>
      */
     public function actionGet($id, $simple = '0')
     {
@@ -198,7 +199,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * 房源收藏
      * @desc 添加或取消房源到收藏夹, 需要事先登陆
      * @param number $id 房源ID
-     * @return object info
+     * @return - info
      */
     public function actionFavorite($id)
     {
@@ -213,7 +214,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @data date $day 日期(天), 格式为yyyy-mm-dd，如"2018-12-24"
      * @data time $time_start 开始时间(精确到分), 格式为hh-MM，如"14:30"表过下午2点30分
      * @data time $time_end 结束时间(精确到分), 格式如上
-     * @return bool/errors info 成功与否 或 错误信息
+     * @return bool/errors - 成功与否 或 错误信息
      */
     public function actionTour($id)
     {
@@ -240,7 +241,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 搜索选项待选列表
      * @desc 搜索选项待选列表
-     * @return [] $list 待选列表
+     * @return [] - 待选列表
      */
     public function actionSearchOptions()
     {

@@ -12,7 +12,8 @@ class AccountController extends \deepziyu\yii\rest\Controller
      * @desc 通过email+password进行登陆
      * @param string $username 登陆用户名(邮箱地址)
      * @param string $password 登陆密码
-     * @return [] account 用户授权结果
+     * @return object profile 用户信息
+     * @return string access_token 用户的access token
      */
     public function actionLogin($username, $password)
     {
@@ -42,7 +43,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
      * @data string $username 用户名
      * @data string $email 邮箱地址
      * @data string $password 用户密码
-     * @return boolean account 用户注册结果, 需要验证邮箱地址
+     * @return boolean - 用户注册结果, 需要验证邮箱地址
      */
     public function actionRegister()
     {
@@ -74,7 +75,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
      * 找回密码
      * @desc 通过邮件地址获取新的临时密码
      * @param string $username 用户名(邮箱地址)
-     * @return boolean result 找回密码结果
+     * @return boolean - 找回密码结果
      */
     public function actionForgotPassword($username)
     {

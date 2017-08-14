@@ -22,7 +22,8 @@ class CommentController extends \deepziyu\yii\rest\Controller
      * @desc 通用的评论列表获取, 支持任何类型的评论, 暂仅有yellowpage在使用，且暂不支持分页
      * @param string $type 评论类型, 如黄页的评论类型为: yellowpage
      * @param number $id 评论实体的id，如果type=yellowpage，那么该id就应该为黄页id
-     * @return [] $list 评论集合
+     * @return number total 总条数, 可用于分页
+     * @return [] items 评论集合
      */
     public function actionList($type, $id)
     {
@@ -63,7 +64,7 @@ class CommentController extends \deepziyu\yii\rest\Controller
      * @data string $content 评论内容
      * @param string $type 评论类型, 如黄页的评论类型为: yellowpage
      * @param number $id 评论实体的id，如果type=yellowpage，那么该id就应该为黄页id
-     * @return bool $result 评论成功与否 || 返回错误提示
+     * @return bool - 评论成功与否 || 返回错误提示
      */
     public function actionSubmit($type, $id)
     {

@@ -13,7 +13,8 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      * @param number $type_id 类型id
      * @param number $page:f
      * @param number $page_size:f;
-     * @return [] $list 黄页结果集合
+     * @return number total 黄页总数
+     * @return [] items 黄页结果集合
      */
     public function actionList($page = 1, $page_size = 25, $city_id = '', $type_id='')
     {
@@ -68,7 +69,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      * 黄页详情
      * @desc 黄页详情
      * @param number $id 黄页id
-     * @return object $data 黄页结果
+     * @return object - 黄页结果
      */
     public function actionGet($id)
     {
@@ -95,7 +96,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      * 黄页点击
      * @desc 黄页点击，用于记录点击数
      * @param number $id 黄页id
-     * @return number $result 执行结果
+     * @return number - 执行结果
      */
     public function actionHit($id)
     {
@@ -104,7 +105,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
     /**
      * 黄页类型列表获取
-     * @return [] $list 类型集合
+     * @return [] - 类型集合
      */
     public function actionTypes()
     {
@@ -116,7 +117,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
     /**
      * 黄页城市列表获取
-     * @return [] $list 城市集合
+     * @return [] - 城市集合
      */
     public function actionCities()
     {

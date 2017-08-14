@@ -8,7 +8,7 @@ class ProfileController extends \deepziyu\yii\rest\Controller
     /**
      * 获取用户信息
      * @desc 获取用户信息, 需要登陆，只能获取当前已登陆的用户信息
-     * @return [] profile 用户信息
+     * @return object - 用户信息
      */
     public function actionGet()
     {

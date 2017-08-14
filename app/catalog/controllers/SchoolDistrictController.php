@@ -9,7 +9,9 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
     /**
      * 学区列表
      * @desc 学区列表
-     * @return [] list 学区列表 结构详见<a href="/help?schooldistrict-list-results" target="_blank">Results</a>
+     * @return total 学区总数
+     * @return items 学区集合 结构详见<a href="/help?schooldistrict-list-results" target="_blank">Results</a>
+     * @return summery 汇总
      */
     public function actionList()
     {
@@ -56,7 +58,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
      * 学区详情
      * @desc 学区详情
      * @param number $id 学区ID
-     * @return [] info 学区信息
+     * @return object - 学区信息
      */
     public function actionGet($id)
     {
@@ -122,7 +124,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
     /**
      * 学区选项列表
      * @desc 学区选项列表
-     * @return object list 学区选项列表
+     * @return object - 学区选项列表
      */
     public function actionMaps()
     {

@@ -16,7 +16,8 @@ class NewsController extends \deepziyu\yii\rest\Controller
      * @param number $content_len 概要内容长度
      * @param number $page 页码
      * @param number $page_size 分页大小
-     * @return [] info 新闻首页数据
+     * @return number total 新闻总数
+     * @return [] items 新闻集合
      */
     public function actionList($type_id = 0, $simple = '0', $only_infomaion = '0', $only_hot = '0', $content_len=200, $page = 1, $page_size = 15)
     {
@@ -67,7 +68,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
      * 新闻详情
      * @desc 新闻详情
      * @param number $id 学区ID
-     * @return [] info 新闻信息
+     * @return [] - 新闻信息
      */
     public function actionGet($id)
     {
@@ -86,7 +87,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
     /**
      * 新闻类型列表
      * @desc 新闻类型列表
-     * @return [] list 列表
+     * @return [] - 列表
      */
     public function actionTypes()
     {

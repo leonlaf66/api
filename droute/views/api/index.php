@@ -362,6 +362,7 @@
                                 <thead>
                                 <tr>
                                     <th>返回类型</th>
+                                    <th>名称</th>
                                     <th>说明</th>
                                 </tr>
                                 </thead>
@@ -369,6 +370,7 @@
                                 <?php foreach ($item['response'] as $param): ?>
                                     <tr>
                                         <td><?= $param[0] ?></td>
+                                        <td><?= $param[1] ?></td>
                                         <td><?= $param[2] ?></td>
                                     </tr>
                                 <?php endforeach; ?>

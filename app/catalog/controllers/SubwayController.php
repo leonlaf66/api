@@ -9,7 +9,7 @@ class SubwayController extends \deepziyu\yii\rest\Controller
     /**
      * 地铁选项列表
      * @desc 地铁选项列表
-     * @return [] list 地铁选项列表
+     * @return [] - 地铁选项列表
      */
     public function actionMaps()
     {

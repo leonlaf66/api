@@ -11,7 +11,8 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
      * @param string $type 房源类型，purchase-售房 lease-租房
      * @param number $page 分页
      * @param number $page_size 分页大小
-     * @return [] $list 收藏集合
+     * @return number total 总数
+     * @return [] items 收藏集合
      */
     public function actionList($type = 'purchase', $page = 1, $page_size = 15)
     {
@@ -62,7 +63,7 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
     /**
      * 删除房源收藏
      * @desc 删除房源收藏, 需要登陆，只能删除已登陆的用户的收藏
-     * @return bool $result 删除结果信息
+     * @return bool - 删除结果信息
      */
     public function actionRemove($id)
     {

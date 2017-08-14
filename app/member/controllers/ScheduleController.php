@@ -10,7 +10,8 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
      * @desc 获取房源预约列表, 需要登陆，只能当前已登陆的用户的房源预约列表
      * @param number $page 分页
      * @param number $page_size 分页大小
-     * @return [] $list 预约集合
+     * @return number total 预约总数
+     * @return [] items 预约集合
      */
     public function actionList($page = 1, $page_size = 15)
     {
@@ -49,7 +50,7 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
     /**
      * 删除房源预约
      * @desc 删除房源预约, 需要登陆，只能删除已登陆的用户的预约
-     * @return bool $result 删除结果信息
+     * @return bool - 删除结果信息
      */
     public function actionRemove($id)
     {
