@@ -10,14 +10,14 @@ class AccountController extends \deepziyu\yii\rest\Controller
     /**
      * 会员登陆
      * @desc 通过email+password进行登陆
-     * @param string $username 登陆用户名(邮箱地址)
+     * @param string $username 登陆用户名(用户名/邮箱地址)
      * @param string $password 登陆密码
      * @return object profile 用户信息
      * @return string access_token 用户的access token
      */
     public function actionLogin($username, $password)
     {
-        $user = \common\customer\Account::findByEmail($username);
+        $user = \common\customer\Account::findByAid($username);
         if (!$user) {
             throw new Exception(403, "不存在的用户!");
         }

@@ -17,7 +17,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function authOptional()
     {
-        return ['search', 'map-search', 'get', 'search-options', 'school-district-options'];
+        return ['search', 'map-search', 'get', 'search-options', 'school-district-options', 'top'];
     }
 
     /**
@@ -85,6 +85,39 @@ class HouseController extends \deepziyu\yii\rest\Controller
         }
 
         return $resuts;
+    }
+
+    /**
+     * 推荐房源
+     * @desc 用于app首页的推荐房源列表
+     * @param string $area_id 区域id
+     * @param number $limit 只返回多少条
+     * @return [] - 查询结果
+     */
+    public function actionTop($limit = 10)
+    {
+        $houses = [];
+
+        $groups = \WS::getStaticData('home.rets.top');
+        foreach ($groups as $items) {
+            foreach ($items as $item) {
+                if ($rets = \common\estate\Rets::findOne($item['list_no'])) {
+                    $render = $rets->render();
+                    $houses[] = [
+                        'id' => $rets->list_no,
+                        'name' => $render->get('name')['value'],
+                        'location' => $rets->getLocation(),
+                        'image' => $rets->getPhoto(0, 800, 800),
+                        'no_bedrooms' => intval($rets->no_bedrooms),
+                        'no_full_baths' => intval($rets->no_full_baths),
+                        'no_half_baths' => intval($rets->no_half_baths),
+                        'square_feet' => $render->get('square_feet')['formatedValue'],
+                    ];
+                }
+            }
+        }
+
+        return array_slice($houses, 0, $limit);
     }
 
     /**

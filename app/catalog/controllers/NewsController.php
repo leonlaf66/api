@@ -7,8 +7,8 @@ use common\news\News;
 class NewsController extends \deepziyu\yii\rest\Controller
 {   
     /**
-     * 新闻首页
-     * @desc 新闻首页
+     * 新闻列表
+     * @desc 新闻列表
      * @param string $area_id 区域ID
      * @param number $type_id 类型id
      * @param number $simple 是否返回简单结果, 0: 较完整, 1:简单
@@ -63,6 +63,33 @@ class NewsController extends \deepziyu\yii\rest\Controller
             'total' => $search->query->count(),
             'items' => $items
         ];
+    }
+
+    /**
+     * 最新新闻资讯
+     * @desc 用于首页的最新资讯列表
+     * @param number $limit 限制条数
+     * @return [] list 资讯集合
+    */
+    public function actionLatest($limit = 6)
+    {
+        $search = News::search();
+        $search->query
+            ->andWhere(['=', 'status', '1'])
+            ->andWhere(['=', 'is_infomation', true])
+            ->orderBy('id', 'DESC')
+            ->limit($limit);
+
+        $items = $search->query->all();
+
+        return array_map(function ($d) {
+            return [
+                'id' => $d->id,
+                'title' => $d->title,
+                'hits' => intval($d->hits),
+                'image' => $d->getImageUrl('news/tmp.jpg')
+            ];
+        }, $items);
     }
 
     /**

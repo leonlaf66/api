@@ -67,6 +67,54 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
     }
 
     /**
+     * 商家黄页推荐
+     * @desc 商家黄页推荐
+     * @return [] - 黄页结果集合
+     */
+    public function actionRecommends()
+    {
+        $groups = \WS::getStaticData('home.yellowpage.top');
+
+        $ids = [];
+        foreach($groups as $group) {
+            $items = $group['ids'];
+            $ids = array_merge($ids, $items);
+        }
+        $ids = array_unique($ids);
+
+        $allYellowpages = YellowPage::find()->where(['in', 'id', $ids])->all();
+        $allYellowpages = \common\helper\ArrayHelper::entityMap($allYellowpages, 'id');
+
+        $results = [];
+
+        foreach($groups as $gIdx=>$group) {
+            $items = [];
+            foreach($group['ids'] as $id) {
+                if(isset($allYellowpages[$id])) {
+                    $items[] = $allYellowpages[$id];
+                }
+            }
+
+            $items = array_map(function ($d) {
+                return [
+                    'id' => $d->id,
+                    'name' => $d->name,
+                    'rating' => $d->rating,
+                    'photo' => $d->getPhotoImageInstance()->resize(90, 90)->getUrl()
+                ];
+            }, $items);
+
+            $results[] = [
+                'id' => $group['id'],
+                'name' => $group['name'],
+                'items' => $items
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
      * 黄页详情
      * @desc 黄页详情
      * @param number $id 黄页id
