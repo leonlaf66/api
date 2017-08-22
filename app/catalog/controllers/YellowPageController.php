@@ -69,9 +69,10 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
     /**
      * 商家黄页推荐
      * @desc 商家黄页推荐
+     * @param string $area_id 区域ID
      * @return [] - 黄页结果集合
      */
-    public function actionRecommends()
+    public function actionRecommends($area_id = 'ma')
     {
         $groups = \WS::getStaticData('home.yellowpage.top');
 

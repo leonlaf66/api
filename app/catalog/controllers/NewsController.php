@@ -68,10 +68,11 @@ class NewsController extends \deepziyu\yii\rest\Controller
     /**
      * 最新新闻资讯
      * @desc 用于首页的最新资讯列表
+     * @param string $area_id 区域ID
      * @param number $limit 限制条数
      * @return [] list 资讯集合
     */
-    public function actionLatest($limit = 6)
+    public function actionLatest($area_id = 'ma', $limit = 6)
     {
         $search = News::search();
         $search->query
