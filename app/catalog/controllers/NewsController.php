@@ -90,7 +90,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
                 'id' => $d->id,
                 'title' => $d->title,
                 'hits' => intval($d->hits),
-                'favorites' => 0;
+                'favorites' => 0,
                 'image' => $d->getImageUrl('news/tmp.jpg')
             ];
         }, $items);
