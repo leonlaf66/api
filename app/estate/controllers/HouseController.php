@@ -115,7 +115,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                         'no_half_baths' => intval($rets->no_half_baths),
                         'square_feet' => $render->get('square_feet')['formatedValue'],
                         'status_name' => $rets->statusName(),
-                        'tags' => $rets->getTags()
+                        'list_days_description' => $rets->getListDaysDescription(),
                     ];
                 }
             }
