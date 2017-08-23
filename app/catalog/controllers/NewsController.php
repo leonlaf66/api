@@ -55,6 +55,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
                 $item['short_content'] = \common\cms\helper\Content::subString(strip_tags($d->content), $content_len);
             }
             $item['hits'] = intval($d->hits);
+            $item['favorites'] = 0;
             $item['created_at'] = $d->created_at;
 
             return $item;
@@ -89,6 +90,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
                 'id' => $d->id,
                 'title' => $d->title,
                 'hits' => intval($d->hits),
+                'favorites' => 0;
                 'image' => $d->getImageUrl('news/tmp.jpg')
             ];
         }, $items);
@@ -110,7 +112,8 @@ class NewsController extends \deepziyu\yii\rest\Controller
             'content' => $news->content,
             'type_id' => $news->type_id,
             'created_at' => $news->created_at,
-            'hits' => intval($news->hits)
+            'hits' => intval($news->hits),
+            'favorites' => 0
         ];
     }
 
