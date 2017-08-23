@@ -107,12 +107,15 @@ class HouseController extends \deepziyu\yii\rest\Controller
                         'id' => $rets->list_no,
                         'name' => $render->get('name')['value'],
                         'location' => $rets->getLocation(),
+                        'prop_type_name' => $rets->propTypeName(),
                         'list_price' => $render->get('list_price')['formatedValue'],
                         'image' => $rets->getPhoto(0, 800, 800),
                         'no_bedrooms' => intval($rets->no_bedrooms),
                         'no_full_baths' => intval($rets->no_full_baths),
                         'no_half_baths' => intval($rets->no_half_baths),
                         'square_feet' => $render->get('square_feet')['formatedValue'],
+                        'status_name' => $rets->statusName(),
+                        'tags' => $rets->getTags()
                     ];
                 }
             }
