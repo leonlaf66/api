@@ -32,6 +32,6 @@ class ConfigsController extends \deepziyu\yii\rest\Controller
     public function actionGet($app_id, $config_id)
     {
         $config = \common\support\AppConfigs::get($app_id, $config_id);
-        return $config ? $config->config_content : null;
+        return $config ? json_decode($config->config_content) : null;
     }
 }
