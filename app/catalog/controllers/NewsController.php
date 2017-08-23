@@ -47,13 +47,14 @@ class NewsController extends \deepziyu\yii\rest\Controller
         $items = array_map(function ($d) use ($simple, $content_len){
             $item = [
                 'id' => $d->id,
+                'title' => $d->title,
                 'image' => $d->getImageUrl('news/tmp.jpg')
             ];
 
             if ($simple !== '1') {
                 $item['short_content'] = \common\cms\helper\Content::subString(strip_tags($d->content), $content_len);
             }
-            $item['hits'] = $d->hits;
+            $item['hits'] = intval($d->hits);
             $item['created_at'] = $d->created_at;
 
             return $item;
