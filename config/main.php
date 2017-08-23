@@ -57,7 +57,8 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
         'estate'=>'module\estate\Module',
         'catalog'=>'module\catalog\Module',
         'passport'=>'module\passport\Module',
-        'member'=>'module\member\Module'
+        'member'=>'module\member\Module',
+        'support'=>'module\support\Module'
     ],
     'aliases'=>[
         '@bower'=>APP_ROOT.'/vendor/bower',

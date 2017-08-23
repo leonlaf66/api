@@ -1,5 +1,9 @@
 <?php
 return [
+    "/support/*",
+    "/support/configs/*",
+    "/support/configs/submit",
+    "/support/configs/get",
     "/estate/*",
     "/estate/area/*",
     "/estate/area/list",

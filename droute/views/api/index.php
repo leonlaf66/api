@@ -291,7 +291,7 @@
                             <table class="ui red celled striped table">
                                 <thead>
                                 <tr>
-                                    <th>请求参数</th>
+                                    <th>GET参数</th>
                                     <th>类型</th>
                                     <th>是否必须</th>
                                     <th>默认值</th>
