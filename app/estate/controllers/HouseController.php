@@ -217,7 +217,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'no_full_baths' => $rets->no_full_baths,
                 'no_half_baths' => $rets->no_half_baths,
                 'square_feet' => $render->get('square_feet')['formatedValue'],
-                'area' => $rets->area ?? tt('Unknown', '未提供'),
+                'area' => $render->get('area')['value'],
                 'status_name' => $rets->statusName(),
                 'list_days_description' => $rets->getListDaysDescription(),
                 'latitude' => $rets->latitude,
