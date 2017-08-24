@@ -18,9 +18,6 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
         ]
     ],
     'components' => [
-        'errorHandler' => [
-            'class'=>'deepziyu\yii\rest\ErrorHandler'
-        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
@@ -50,6 +47,9 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
             'on beforeSend' => function ($event) {
                 //$event->sender->format = 'json';
             },
+        ],
+        'errorHandler' => [
+            'class'=>'module\support\ErrorHandler'
         ],
     ],
     'modules'=>[
