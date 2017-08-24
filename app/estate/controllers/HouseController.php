@@ -200,6 +200,12 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $render = $rets->render();
 
         if ($simple === '0') {
+            // 构造城市areas
+            $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$rets->town])->one()->name);
+            $cityId = str_replace(' ', '-', $cityId);
+            $polygons = \common\estate\helpers\Config::get('map.city.polygon/'.$cityId);
+            if (!$polygons) $polygons = [];
+
             return [
                 'id' => $rets->list_no,
                 'name' => $render->get('name')['value'],
@@ -211,6 +217,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'no_full_baths' => $rets->no_full_baths,
                 'no_half_baths' => $rets->no_half_baths,
                 'square_feet' => $render->get('square_feet')['formatedValue'],
+                'area' => $rets->area ?? tt('Unknown', '未提供'),
                 'status_name' => $rets->statusName(),
                 'list_days_description' => $rets->getListDaysDescription(),
                 'latitude' => $rets->latitude,
@@ -218,7 +225,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'images' => $rets->getPhotos(),
                 'roi' => DetailHelper::fetchRoi($rets),
                 'details' => DetailHelper::fetchDetail($rets),
-                'recommend_houses' => DetailHelper::fetchRecommends($rets)
+                'recommend_houses' => DetailHelper::fetchRecommends($rets),
+                'polygons' => $polygons
             ];
         } else {
             return [
