@@ -203,8 +203,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
             // 构造城市areas
             $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$rets->town])->one()->name);
             $cityId = str_replace(' ', '-', $cityId);
-            $polygons = \common\estate\helpers\Config::get('map.city.polygon/'.$cityId);
-            if (!$polygons) $polygons = [];
+            $polygons = \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []);
 
             return [
                 'id' => $rets->list_no,
