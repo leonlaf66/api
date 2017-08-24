@@ -61,6 +61,7 @@ class Detail
 
             return [
                 'id' => $e->list_no,
+                'name' => $r->get('name')['value'],
                 'location' => $e->getLocation(),
                 'image' => $e->getPhoto(0, 500, 500),
                 'list_price' => $e->list_price,
