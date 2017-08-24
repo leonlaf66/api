@@ -56,6 +56,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
             $r = $rets->render();
             $items[] = [
                 'id' => $rets->list_no,
+                'name' => $render->get('name')['value'],
                 'location' => $rets->location,
                 'image' => $rets->getPhoto(0, 800, 800),
                 'images' => [
