@@ -202,6 +202,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         if ($simple === '0') {
             return [
                 'id' => $rets->list_no,
+                'name' => $render->get('name')['value'],
                 'location' => $rets->getLocation(),
                 'list_price' => $render->get('list_price')['formatedValue'],
                 'prop_type_name' => $render->get('prop_type_name')['value'],
@@ -222,6 +223,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         } else {
             return [
                 'id' => $rets->list_no,
+                'name' => $render->get('name')['value'],
                 'location' => $rets->getLocation(),
                 'list_price' => $render->get('list_price')['formatedValue'],
                 'prop_type_name' => $render->get('prop_type_name')['value'],
