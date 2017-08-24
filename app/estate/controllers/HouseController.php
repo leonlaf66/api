@@ -54,7 +54,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $items = [];
         foreach ($results as $rets) {
             $r = $rets->render();
-            $items[$rets->list_no] = [
+            $items[] = [
+                'id' => $rets->list_no,
                 'location' => $rets->location,
                 'image' => $rets->getPhoto(0, 800, 800),
                 'images' => [
