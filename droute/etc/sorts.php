@@ -9,6 +9,7 @@ return [
     "/estate/area/list",
     "/estate/house/*",
     "/estate/house/search",
+    "/estate/house/hot-areas",
     "/estate/house/map-search",
     "/estate/house/top",
     "/estate/house/search-options",

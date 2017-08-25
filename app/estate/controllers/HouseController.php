@@ -17,7 +17,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function authOptional()
     {
-        return ['search', 'map-search', 'get', 'search-options', 'school-district-options', 'top'];
+        return ['search', 'map-search', 'get', 'search-options', 'school-district-options', 'top', 'hot-areas'];
     }
 
     /**
@@ -325,6 +325,36 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'title' => $zipcode->zip,
                 'desc' => $zipcode->city_name.','.$zipcode->city_name_cn.',MA'
             ];
+        }
+
+        return $resultItems;
+    }
+
+    /**
+     * 热门区域
+     * @param string $area_id 区域id
+     * @return [] - 区域列表
+     */
+    public function actionHotAreas()
+    {
+        $names = ['Malden', 'Cambridge', 'Lexington', 'Newton', 'Brookline', 'Waltham', 'Boston', 'Arlington', 'Sommerville'];
+        $items = \common\catalog\Town::find()
+            ->where(['state' => 'MA'])
+            ->andWhere(['in', 'name', $names])
+            ->all();
+
+        $itemsMap = \common\helper\ArrayHelper::index($items, 'name');
+
+        $resultItems = [];
+        foreach($names as $name) {
+            if (isset($itemsMap[$name])) {
+                $d = $itemsMap[$name];
+                $resultItems[] = [
+                    'id' => $d->id,
+                    'code' => $d->short_name,
+                    'name' => tt($d->name, $d->name_cn)
+                ];
+            }
         }
 
         return $resultItems;

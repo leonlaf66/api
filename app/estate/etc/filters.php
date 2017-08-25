@@ -1,5 +1,9 @@
 <?php
 return [
+    'city_code' => function ($code, $search) {
+        $code = strtoupper($code);
+        $search->query->andWhere(['=', 'town', $code]);
+    },
     'list_price' => function ($range, $search) {
         list($start, $end) = array_values(array_merge([
             'from' => 0,

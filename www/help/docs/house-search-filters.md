@@ -3,6 +3,7 @@
 ## 请求 (GET方式)
 ``` javascript
 {
+    "city_code": "", // 城市编码
     "list_price": {"from": 0, "to": 1000}, // 价格范围, from默认为0, to默认为无限大
     "prop-type": [], // 售房专用，指定需限制的房源类型, 如["MF", "SF", "CC"]
     "square": {"from": 0, "to": 200}, // 面积范围, from默认为0, to默认为无限大
