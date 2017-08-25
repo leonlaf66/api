@@ -332,12 +332,13 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
     /**
      * 热门区域
+     * @desc 房源热门区域，可以应用到房源搜索的filters条件中
      * @param string $area_id 区域id
      * @return [] - 区域列表
      */
     public function actionHotAreas()
     {
-        $names = ['Malden', 'Cambridge', 'Lexington', 'Newton', 'Brookline', 'Waltham', 'Boston', 'Arlington', 'Sommerville'];
+        $names = ['Malden', 'Cambridge', 'Lexington', 'Newton', 'Brookline', 'Waltham', 'Boston', 'Arlington', 'Quincy'];
         $items = \common\catalog\Town::find()
             ->where(['state' => 'MA'])
             ->andWhere(['in', 'name', $names])
