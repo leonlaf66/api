@@ -24,6 +24,7 @@ return [
     "/catalog/subway/*",
     "/catalog/subway/maps",
     "/catalog/news/*",
+    "/catalog/news/list-top-banner",
     "/catalog/news/list",
     "/catalog/news/latest",
     "/catalog/news/get",

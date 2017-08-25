@@ -127,4 +127,15 @@ class NewsController extends \deepziyu\yii\rest\Controller
     {
         return \common\core\TaxonomyTerm::typeOptions(3);
     }
-}
+
+    /**
+     * 新闻顶部Banner
+     * @desc 新闻顶部的图文Banner, 返回结果中的news_id用于点周并查看相应新闻内容
+     * @param string $area_id 区域ID
+     * @return [] - 列表
+     */
+    public function actionListTopBanner($area_id)
+    {
+        return \WS::getStaticData('app.news.banner.top');
+    }
+}   
