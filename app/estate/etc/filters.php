@@ -1,5 +1,9 @@
 <?php
 return [
+    'latlon' => function ($vals, $search) {
+        list($lat, $lon) = explode(',', $vals);
+        $search->query->andWhere('earth_box(ll_to_earth(latitude, longitude),2000) @> ll_to_earth(:lat, :lon)', [':lat' => $lat, ':lon' => $lon]);
+    },
     'city_code' => function ($code, $search) {
         $code = strtoupper($code);
         $search->query->andWhere(['=', 'town', $code]);
