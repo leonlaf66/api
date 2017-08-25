@@ -349,11 +349,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         foreach($names as $name) {
             if (isset($itemsMap[$name])) {
                 $d = $itemsMap[$name];
-                $resultItems[] = [
-                    'id' => $d->id,
-                    'code' => $d->short_name,
-                    'name' => tt($d->name, $d->name_cn)
-                ];
+                $resultItems[strtolower($d->short_name)] = tt($d->name, $d->name_cn);
             }
         }
 
