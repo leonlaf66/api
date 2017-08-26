@@ -69,6 +69,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'square_feet' => $r->get('square_feet')['formatedValue'],
                 'list_price' => $r->get('list_price')['formatedValue'],
                 'prop_type_name' => $rets->propTypeName(),
+                'latitude' => $rets->latitude,
+                'longitude' => $rets->longitude,
                 'status_name' => $rets->statusName(),
                 'list_days_description' => $rets->getListDaysDescription(),
                 'tags' => $rets->getTags()
