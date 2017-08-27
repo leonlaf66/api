@@ -161,9 +161,22 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
     public function actionTypes($area_id = 'ma')
     {
         $items = \common\core\TaxonomyTerm::typeOptions(2);
-        return array_map(function ($d) {
-            return preg_replace('/\[.*\]/', '', $d);
-        }, $items);
+
+        $resultItems = [];
+        foreach ($items as $id => $d) {
+            $icon = '';
+            if (preg_match('/\[(.*)\]/', $d, $match)) {
+                $icon = $match[1];
+            }
+
+            $resultItems[] = [
+                'id' => $id,
+                'name' => preg_replace('/\[.*\]/', '', $d),
+                'icon' => media_url('yellowpage/types/'.$icon)
+            ];
+        }
+
+        return $resultItems;
     }
 
     /**

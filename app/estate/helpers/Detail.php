@@ -65,6 +65,8 @@ class Detail
                 'location' => $e->getLocation(),
                 'image' => $e->getPhoto(0, 500, 500),
                 'list_price' => $e->list_price,
+                'latitude' => $e->latitude,
+                'longitude' => $e->longitude,
                 'rooms_descriptions' => $r->get('rooms_descriptions')['value'],
                 'prop_type_name' => $r->get('prop_type_name')['value']
             ];
