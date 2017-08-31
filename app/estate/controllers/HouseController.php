@@ -135,10 +135,11 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
+     * @param number $limit 限制条数
      * @return [] items 查询结果
      * @return [] polygons 区域边界
      */
-    public function actionMapSearch($area_id = 'ma', $type = 'purchase', $q = '')
+    public function actionMapSearch($area_id = 'ma', $type = 'purchase', $q = '', $limit=4000)
     {
         // 请求参数
         $req = WS::$app->request;
@@ -150,7 +151,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $townCodes = SearchMap::apply($req, $search);
 
         // 限制总返回数量
-        $search->query->limit(4000);
+        $search->query->limit($limit);
 
         // 获取真实结果
         $search->query->select('id, list_price, prop_type, latitude, longitude');
