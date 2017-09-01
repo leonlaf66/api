@@ -50,8 +50,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
         // 获取真实结果
         $results = RetsHelper::result($search);
 
-        // 构造结果
-        $items = [];
         foreach ($results as $rets) {
             $r = $rets->render();
             $items[] = [

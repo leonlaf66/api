@@ -63,12 +63,6 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
                     'status_name' => $e->statusName(),
                     'list_days_description' => $e->getListDaysDescription(),
                     'tags' => $e->getTags()
-                    /*
-                    'id' => $e->list_no,
-                    'location' => $e->getLocation(),
-                    'image' => $e->getPhoto(0),
-                    'list_price' => $price['formatedValue'],
-                    'status_name' => $e->statusName()*/
                 ],
                 'created_at' => $d->created_at
             ];
