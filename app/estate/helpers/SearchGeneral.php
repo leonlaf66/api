@@ -59,14 +59,14 @@ class SearchGeneral
     public static function applySortOrder($type, $search)
     {
         $maps = [
-            '0' => 'id DESC',
-            '1'=>'list_price ASC',
-            '2'=>'list_price DESC',
-            '3'=>'no_bedrooms DESC',
-            '4'=>'no_bedrooms ASC'
+            '0' => ['id' => SORT_DESC],
+            '1' => ['list_price' =>  SORT_ASC],
+            '2' => ['list_price' => SORT_DESC],
+            '3' => ['no_bedrooms' => SORT_DESC],
+            '4' => ['no_bedrooms' => SORT_ASC]
         ];
 
-        if (! isset($maps[$type])) return;
+        if (! isset($maps[$type])) $type = '0';
 
         $search->query->orderBy($maps[$type]);
     }

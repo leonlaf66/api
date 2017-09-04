@@ -80,7 +80,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
         $search->query
             ->andWhere(['=', 'status', '1'])
             ->andWhere(['=', 'is_infomation', true])
-            ->orderBy('id', 'DESC')
+            ->orderBy(['id' => SORT_DESC])
             ->limit($limit);
 
         $items = $search->query->all();
