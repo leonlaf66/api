@@ -59,7 +59,7 @@
     },
     "autoload": {
         "files": [
-            "./../fdn/support/helpers.php",
+            "./../fdn/helpers.php",
             "./app/support/ErrorHandler.php"
         ],
         "psr-4": {

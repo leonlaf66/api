@@ -18,7 +18,7 @@ ini_set('memory_limit', '1024M');
 require(APP_ROOT . '/vendor/autoload.php');
 require(APP_ROOT . '/vendor/yiisoft/yii2/Yii.php');
 
-require(dirname(APP_ROOT) . '/fdn/web/WS.php');
+require(dirname(APP_ROOT) . '/fdn/WS.php');
 require(APP_ROOT . '/app/App.php');
 
 $config = require(APP_ROOT . '/config/main.php');

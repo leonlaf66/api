@@ -1,5 +1,5 @@
 <?php
-class App extends \common\web\ApiApp
+class App extends \common\supports\ApiApp
 {
     public $appToken = '';
     public $baseUrl = '/';
