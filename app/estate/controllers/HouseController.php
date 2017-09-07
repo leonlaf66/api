@@ -47,32 +47,35 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $search->pagination->setPage(intval($page) - 1);
         $search->pagination->setPageSize($page_size);
 
-        // 获取真实结果
-        $results = RetsHelper::result($search);
+        $items = [];
+        if (intval($page) - 1 < 100) { // 限制最多100页
+            // 获取真实结果
+            $results = RetsHelper::result($search);
 
-        foreach ($results as $rets) {
-            $r = $rets->render();
-            $items[] = [
-                'id' => $rets->list_no,
-                'name' => $r->get('name')['value'],
-                'location' => $rets->location,
-                'image' => $rets->getPhoto(0, 800, 800),
-                'images' => [
-                    $rets->getPhoto(1, 600, 600),
-                    $rets->getPhoto(2, 600, 600)
-                ],
-                'no_bedrooms' => intval($rets->no_bedrooms),
-                'no_full_baths' => intval($rets->no_full_baths),
-                'no_half_baths' => intval($rets->no_half_baths),
-                'square_feet' => $r->get('square_feet')['formatedValue'],
-                'list_price' => $r->get('list_price')['formatedValue'],
-                'prop_type_name' => $rets->propTypeName(),
-                'latitude' => $rets->latitude,
-                'longitude' => $rets->longitude,
-                'status_name' => $rets->statusName(),
-                'list_days_description' => $rets->getListDaysDescription(),
-                'tags' => $rets->getTags()
-            ];
+            foreach ($results as $rets) {
+                $r = $rets->render();
+                $items[] = [
+                    'id' => $rets->list_no,
+                    'name' => $r->get('name')['value'],
+                    'location' => $rets->location,
+                    'image' => $rets->getPhoto(0, 800, 800),
+                    'images' => [
+                        $rets->getPhoto(1, 600, 600),
+                        $rets->getPhoto(2, 600, 600)
+                    ],
+                    'no_bedrooms' => intval($rets->no_bedrooms),
+                    'no_full_baths' => intval($rets->no_full_baths),
+                    'no_half_baths' => intval($rets->no_half_baths),
+                    'square_feet' => $r->get('square_feet')['formatedValue'],
+                    'list_price' => $r->get('list_price')['formatedValue'],
+                    'prop_type_name' => $rets->propTypeName(),
+                    'latitude' => $rets->latitude,
+                    'longitude' => $rets->longitude,
+                    'status_name' => $rets->statusName(),
+                    'list_days_description' => $rets->getListDaysDescription(),
+                    'tags' => $rets->getTags()
+                ];
+            }
         }
 
         // 返回
