@@ -23,6 +23,11 @@ class NewsController extends \deepziyu\yii\rest\Controller
     public function actionList($area_id = 'ma', $type_id = 0, $simple = '0', $only_infomaion = '0', $only_hot = '0', $content_len=200, $page = 1, $page_size = 15)
     {
         $search = News::search();
+
+        // 分页处理
+        $search->pagination->setPage($page);
+        $search->pagination->setPageSize($page_size);
+
         $search->query->andWhere(['=', 'status', '1']);
 
         // 类型
@@ -40,9 +45,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
             $search->query->andWhere(['=', 'is_hot', true]);
         }
 
-        // 分页处理
-        $search->pagination->page = $page;
-        $search->pagination->pageSize = $page_size;
+        $total = $search->query->count();
 
         $items = array_map(function ($d) use ($simple, $content_len){
             $item = [
@@ -59,10 +62,10 @@ class NewsController extends \deepziyu\yii\rest\Controller
             $item['created_at'] = $d->created_at;
 
             return $item;
-        }, $search->query->all());
+        }, $search->getModels());
 
         return [
-            'total' => $search->query->count(),
+            'total' => $total,
             'items' => $items
         ];
     }

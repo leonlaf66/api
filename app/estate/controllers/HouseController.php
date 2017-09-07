@@ -44,8 +44,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
         SearchGeneral::apply($req, $search);
 
         // 分页处理
-        $search->pagination->page = $page;
-        $search->pagination->pageSize = $page_size;
+        $search->pagination->setPage($page);
+        $search->pagination->setPageSize($page_size);
 
         // 获取真实结果
         $results = RetsHelper::result($search);
