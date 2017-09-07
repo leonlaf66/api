@@ -40,10 +40,10 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
         $search->query->orderBy('rating DESC, hits DESC, id DESC');
 
         // 分页处理
-        $search->pagination->page = $page;
+        $search->pagination->setPage(intval($page) - 1);
         $search->pagination->pageSize = $page_size;
 
-        $items = $search->query->all();
+        $items = $search->getModels();
         $items = array_map(function ($d) {
             return [
                 'id' => $d->id,

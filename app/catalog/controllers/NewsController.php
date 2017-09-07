@@ -25,7 +25,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
         $search = News::search();
 
         // 分页处理
-        $search->pagination->setPage($page);
+        $search->pagination->setPage(intval($page) - 1);
         $search->pagination->setPageSize($page_size);
 
         $search->query->andWhere(['=', 'status', '1']);
