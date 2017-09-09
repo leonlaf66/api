@@ -8,7 +8,7 @@ use module\estate\helpers\SearchMap;
 use common\estate\helpers\Rets as RetsHelper;
 use module\estate\helpers\Detail as DetailHelper;
 
-class HouseController extends \deepziyu\yii\rest\Controller
+class HouseController extends \module\core\Controller
 {   
     public $enableAuth = true;
 
