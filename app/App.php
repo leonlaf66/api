@@ -23,6 +23,7 @@ class App extends \common\supports\ApiApp
     {
         if (\Yii::$app->request->headers->get('app-token') !== $this->appToken) {
             echo json_encode([
+                'app-token' => \Yii::$app->request->headers->get('app-token'),
                 'response' => [
                     'code' => 401,
                     'message' => 'APP授权失败'

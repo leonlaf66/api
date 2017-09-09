@@ -9,14 +9,19 @@ class Controller extends \deepziyu\yii\rest\Controller
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
-            'corsFilter'=>[
+
+            // For cross-domain AJAX request
+            'corsFilter'  => [
                 'class' => Cors::className(),
-                'cors' => [
-                    'Origin' => ['*'],
-                    'Access-Control-Request-Method' => ['GET', 'POST', 'HEAD', 'OPTIONS'],
-                    'Access-Control-Request-Headers' => ['app-token', 'language']
-                ]
+                'cors'  => [
+                    // restrict access to domains:
+                    'Origin'                           => ['*'],
+                    'Access-Control-Request-Method'    => ['GET', 'POST', 'DELETE', 'OPTIONS'],
+                    'Access-Control-Allow-Credentials' => true,
+                    'Access-Control-Max-Age'           => 3600,
+                ],
             ],
+
         ]);
     }
 }
