@@ -8,7 +8,7 @@ class App extends \common\supports\ApiApp
     public $siteMaps = [
         'ma' => 'MA'
     ];
-    public $stateId = null;
+    public $stateId = 'MA';
 
     public function bootstrap()
     {
