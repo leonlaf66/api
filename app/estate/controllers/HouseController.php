@@ -175,7 +175,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         if (! empty($townCodes)) {
             foreach ($townCodes as $code) {
                 $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$code])->one()->name);
-                $polygons = array_merge($polygons, \common\estate\helpers\Config::get('map.city.polygon/'.$cityId));
+                $polygons = array_merge($polygons, \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []));
             }
         }
 
