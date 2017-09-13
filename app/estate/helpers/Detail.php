@@ -62,13 +62,23 @@ class Detail
             return [
                 'id' => $e->list_no,
                 'name' => $r->get('name')['value'],
-                'location' => $e->getLocation(),
-                'image' => $e->getPhoto(0, 500, 500),
-                'list_price' => $e->list_price,
+                'location' => $e->location,
+                'image' => $e->getPhoto(0, 800, 800),
+                'images' => [
+                    $e->getPhoto(1, 600, 600),
+                    $e->getPhoto(2, 600, 600)
+                ],
+                'no_bedrooms' => intval($e->no_bedrooms),
+                'no_full_baths' => intval($e->no_full_baths),
+                'no_half_baths' => intval($e->no_half_baths),
+                'square_feet' => $r->get('square_feet')['formatedValue'],
+                'list_price' => $r->get('list_price')['formatedValue'],
+                'prop_type_name' => $e->propTypeName(),
                 'latitude' => $e->latitude,
                 'longitude' => $e->longitude,
-                'rooms_descriptions' => $r->get('rooms_descriptions')['value'],
-                'prop_type_name' => $r->get('prop_type_name')['value']
+                'status_name' => $e->statusName(),
+                'list_days_description' => $e->getListDaysDescription(),
+                'tags' => $e->getTags()
             ];
         }, $items);
     }
