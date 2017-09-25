@@ -40,7 +40,6 @@ class AccountController extends \deepziyu\yii\rest\Controller
      * 会员注册
      * @method POST
      * @desc 通过email进行会员注册
-     * @data string $username 用户名
      * @data string $email 邮箱地址
      * @data string $password 用户密码
      * @return boolean - 用户注册结果, 需要验证邮箱地址

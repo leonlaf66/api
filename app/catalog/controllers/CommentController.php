@@ -43,7 +43,7 @@ class CommentController extends \deepziyu\yii\rest\Controller
                 'rating' => $d->rating,
                 'user' => [
                     'id' => $user->id,
-                    'name' => $user->username
+                    'name' => $user->email
                 ],
                 'comments' => $d->comments,
                 'created_at' => $d->created_at
