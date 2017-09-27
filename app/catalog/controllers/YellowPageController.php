@@ -171,7 +171,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
             $resultItems[] = [
                 'id' => $id,
-                'name' => preg_replace('/\[.*\]/', '', $d),
+                'name' => t('yp/tag', preg_replace('/\[.*\]/', '', $d)),
                 'icon' => media_url('yellowpage/types/'.$icon)
             ];
         }
