@@ -37,6 +37,35 @@ class AccountController extends \deepziyu\yii\rest\Controller
     }
 
     /**
+     * 微信登陆
+     * @method POST
+     * @desc 微信登陆
+     * @data string $open_id
+     * @return string - 用户的Access token
+     */
+    public function actionWechatLogin($open_id)
+    {
+        $now = date('Y-m-d H:i:s', time());
+        $accessToken = WS::$app->security->generateRandomString();
+
+        $data = [
+            'auth_key' => WS::$app->getSecurity()->generateRandomString(),
+            'access_token' => $accessToken,
+            'created_at' => $now,
+            'updated_at' => $now,
+            'registration_ip' => WS::$app->request->getUserIP(),
+            'open_id' => $open_id,
+            'confirmed_at' => $now
+        ];
+
+        $result = WS::$app->db->createCommand()
+            ->insert('user', $data)
+            ->execute();
+
+        return $result > 0 ? ['access_token' => $accessToken] : false;
+    }
+
+    /**
      * 会员注册
      * @method POST
      * @desc 通过email进行会员注册
