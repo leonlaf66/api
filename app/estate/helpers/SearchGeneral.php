@@ -59,7 +59,7 @@ class SearchGeneral
     public static function applySortOrder($type, $search)
     {
         $maps = [
-            '0' => ['id' => SORT_DESC],
+            '0' => ['list_date' => SORT_DESC],
             '1' => ['list_price' =>  SORT_ASC],
             '2' => ['list_price' => SORT_DESC],
             '3' => ['no_bedrooms' => SORT_DESC],
