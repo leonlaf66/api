@@ -42,6 +42,7 @@ return [
     "/passport/*",
     "/passport/account/*",
     "/passport/account/login",
+    "/passport/account/wechat-login",
     "/passport/account/register",
     "/passport/account/forgot-password",
     "/member/*",
