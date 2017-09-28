@@ -40,7 +40,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
      * 微信登陆
      * @method POST
      * @desc 微信登陆
-     * @data string $open_id
+     * @param string $open_id
      * @return string - 用户的Access token
      */
     public function actionWechatLogin($open_id)
