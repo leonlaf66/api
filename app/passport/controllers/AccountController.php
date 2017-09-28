@@ -45,24 +45,32 @@ class AccountController extends \deepziyu\yii\rest\Controller
      */
     public function actionWechatLogin($open_id)
     {
-        $now = date('Y-m-d H:i:s', time());
-        $accessToken = WS::$app->security->generateRandomString();
+        $accessToken = (new \yii\db\Query())
+            ->select('access_token')
+            ->from('user')
+            ->where(['open_id' => $open_id])
+            ->scalar();
 
-        $data = [
-            'auth_key' => WS::$app->getSecurity()->generateRandomString(),
-            'access_token' => $accessToken,
-            'created_at' => $now,
-            'updated_at' => $now,
-            'registration_ip' => WS::$app->request->getUserIP(),
-            'open_id' => $open_id,
-            'confirmed_at' => $now
-        ];
+        if (!$accessToken) {
+            $now = date('Y-m-d H:i:s', time());
+            $accessToken = WS::$app->security->generateRandomString();
 
-        $result = WS::$app->db->createCommand()
-            ->insert('user', $data)
-            ->execute();
+            $data = [
+                'auth_key' => WS::$app->getSecurity()->generateRandomString(),
+                'access_token' => $accessToken,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'registration_ip' => WS::$app->request->getUserIP(),
+                'open_id' => $open_id,
+                'confirmed_at' => $now
+            ];
 
-        return $result > 0 ? ['access_token' => $accessToken] : false;
+            $result = WS::$app->db->createCommand()
+                ->insert('user', $data)
+                ->execute();
+        }
+
+        return ['access_token' => $accessToken];
     }
 
     /**
