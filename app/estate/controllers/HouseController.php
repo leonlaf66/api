@@ -203,6 +203,13 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
         $render = $rets->render();
 
+        $options = \yii\helpers\ArrayHelper::merge([
+            'image' => [
+                'width' => '800',
+                'height' => '800'
+            ]
+        ], WS::$app->request->get('options', []));
+
         if ($simple === '0') {
             // 构造城市areas
             $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$rets->town])->one()->name);
@@ -225,7 +232,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'list_days_description' => $rets->getListDaysDescription(),
                 'latitude' => $rets->latitude,
                 'longitude' => $rets->longitude,
-                'images' => $rets->getPhotos(800, 800),
+                'images' => $rets->getPhotos($options['image']['width'], $options['image']['height']),
                 'roi' => DetailHelper::fetchRoi($rets),
                 'details' => DetailHelper::fetchDetail($rets),
                 'recommend_houses' => DetailHelper::fetchRecommends($rets),
