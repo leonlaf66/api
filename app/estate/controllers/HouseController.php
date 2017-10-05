@@ -207,6 +207,10 @@ class HouseController extends \deepziyu\yii\rest\Controller
             'image' => [
                 'width' => '800',
                 'height' => '800'
+            ],
+            'small_image' => [
+                'width' => '400',
+                'height' => '300'
             ]
         ], WS::$app->request->get('options', []));
 
@@ -233,6 +237,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'latitude' => $rets->latitude,
                 'longitude' => $rets->longitude,
                 'images' => $rets->getPhotos($options['image']['width'], $options['image']['height']),
+                'small_images' => $rets->getPhotos($options['small_image']['width'], $options['small_image']['height']),
                 'roi' => DetailHelper::fetchRoi($rets),
                 'details' => DetailHelper::fetchDetail($rets),
                 'recommend_houses' => DetailHelper::fetchRecommends($rets),
