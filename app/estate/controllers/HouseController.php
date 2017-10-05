@@ -225,7 +225,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'list_days_description' => $rets->getListDaysDescription(),
                 'latitude' => $rets->latitude,
                 'longitude' => $rets->longitude,
-                'images' => $rets->getPhotos(1920, 1080),
+                'images' => $rets->getPhotos(800, 800),
                 'roi' => DetailHelper::fetchRoi($rets),
                 'details' => DetailHelper::fetchDetail($rets),
                 'recommend_houses' => DetailHelper::fetchRecommends($rets),
