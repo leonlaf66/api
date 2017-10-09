@@ -5,6 +5,6 @@ class Taxonomy extends \yii\db\ActiveRecord
 {
 	public function tableName()  
     {  
-        return 'catalog_taxonomy';
+        return 'taxonomy';
     }
 }

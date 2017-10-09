@@ -5,7 +5,7 @@ class Storage extends \yii\db\ActiveRecord
 {
     public static function tableName()  
     {  
-        return 'fs_storage';
+        return 'storage';
     }
 
     public function getImageName()
