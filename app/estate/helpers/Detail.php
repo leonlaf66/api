@@ -53,7 +53,7 @@ class Detail
 
     public static function fetchRecommends($rets)
     {
-        $items = \common\estate\RetsIndex::findOne($rets->list_no)->nearbyHouses();
+        $items = \common\estate\HouseIndex::findOne($rets->list_no)->nearbyHouses();
 
         return array_map(function ($d) {
             $e = $d->entity();

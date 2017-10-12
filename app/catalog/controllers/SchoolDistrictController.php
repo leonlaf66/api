@@ -2,7 +2,7 @@
 namespace module\catalog\controllers;
 
 use WS;
-use common\catalog\SchoolDistrict;
+use models\SchoolDistrict;
 
 class SchoolDistrictController extends \deepziyu\yii\rest\Controller
 {   
@@ -67,7 +67,7 @@ class SchoolDistrictController extends \deepziyu\yii\rest\Controller
 
         // 获取热门房源
         $towns = explode('/', $item->code);
-        $houses = \common\estate\RetsIndex::find()
+        $houses = \common\estate\HouseIndex::find()
             ->where(['in', 'town', $towns])
             ->andWhere(['=', 'prop_type', 'SF'])
             ->andWhere(['>', 'list_price', 700000])

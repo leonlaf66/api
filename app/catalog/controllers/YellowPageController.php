@@ -2,7 +2,7 @@
 namespace module\catalog\controllers;
 
 use WS;
-use common\yellowpage\YellowPage;
+use models\YellowPage;
 
 class YellowPageController extends \deepziyu\yii\rest\Controller
 {   
@@ -186,6 +186,6 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      */
     public function actionCities($area_id = 'ma')
     {
-        return \common\catalog\Town::mapOptions();
+        return \models\Town::mapOptions();
     }
 }

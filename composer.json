@@ -65,7 +65,8 @@
         "psr-4": {
             "common\\": "./../fdn",
             "module\\core\\": "./app/core",
-            "droute\\": "./droute"
+            "droute\\": "./droute",
+            "models\\": "./../fdn/_models"
         }
     }
 }

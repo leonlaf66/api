@@ -2,7 +2,7 @@
 namespace module\estate\controllers;
 
 use WS;
-use common\estate\RetsIndex;
+use common\estate\HouseIndex;
 use module\estate\helpers\SearchGeneral;
 use module\estate\helpers\SearchMap;
 use common\estate\helpers\Rets as RetsHelper;
@@ -38,7 +38,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $req = WS::$app->request;
 
         // search对象
-        $search = RetsIndex::search();
+        $search = HouseIndex::search();
 
         // 搜索参数应用
         SearchGeneral::apply($req, $search);
@@ -146,7 +146,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $req = WS::$app->request;
 
         // search对象
-        $search = RetsIndex::search();
+        $search = HouseIndex::search();
 
         // 搜索参数应用
         $townCodes = SearchMap::apply($req, $search);
@@ -174,7 +174,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $polygons = [];
         if (! empty($townCodes)) {
             foreach ($townCodes as $code) {
-                $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$code])->one()->name);
+                $cityId = strtolower(\models\Town::find()->where(['short_name'=>$code])->one()->name);
                 $polygons = array_merge($polygons, \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []));
             }
         }
@@ -216,7 +216,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
         if ($simple === '0') {
             // 构造城市areas
-            $cityId = strtolower(\common\catalog\Town::find()->where(['short_name'=>$rets->town])->one()->name);
+            $cityId = strtolower(\models\Town::find()->where(['short_name'=>$rets->town])->one()->name);
             $cityId = str_replace(' ', '-', $cityId);
             $polygons = \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []);
 
@@ -314,7 +314,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
     {
         $resultItems = [];
 
-        $towns = \common\catalog\Town::find()->where([
+        $towns = \models\Town::find()->where([
             'state'=>'MA'
         ])->all();
 
@@ -332,7 +332,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
             }
         }
 
-        $zipcodes = \common\catalog\Zipcode::find()->where([
+        $zipcodes = \models\ZipcodeTown::find()->where([
             'state'=>'MA'
         ])->all();
 
@@ -355,7 +355,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
     public function actionHotAreas()
     {
         $names = ['Malden', 'Cambridge', 'Lexington', 'Newton', 'Brookline', 'Waltham', 'Boston', 'Arlington', 'Quincy'];
-        $items = \common\catalog\Town::find()
+        $items = \models\Town::find()
             ->where(['state' => 'MA'])
             ->andWhere(['in', 'name', $names])
             ->all();

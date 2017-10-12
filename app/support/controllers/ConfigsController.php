@@ -19,7 +19,7 @@ class ConfigsController extends \deepziyu\yii\rest\Controller
         $configId = WS::$app->request->post('config_id');
         $configContent = json_encode(WS::$app->request->post('config_content'));
 
-        return \common\supports\AppConfigs::submit($app_id, $configId, $configContent);
+        return \models\AppSetting::submit($app_id, $configId, $configContent);
     }
 
     /**
@@ -31,7 +31,7 @@ class ConfigsController extends \deepziyu\yii\rest\Controller
      */
     public function actionGet($app_id, $config_id)
     {
-        $config = \common\supports\AppConfigs::get($app_id, $config_id);
+        $config = \models\AppSetting::get($app_id, $config_id);
         return $config ? json_decode($config->config_content) : null;
     }
 }

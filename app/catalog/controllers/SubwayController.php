@@ -2,7 +2,7 @@
 namespace module\catalog\controllers;
 
 use WS;
-use common\catalog\SchoolDistrict;
+use models\SchoolDistrict;
 
 class SubwayController extends \deepziyu\yii\rest\Controller
 {   
@@ -14,7 +14,7 @@ class SubwayController extends \deepziyu\yii\rest\Controller
      */
     public function actionMaps($area_id = 'ma')
     {
-        $items = \common\catalog\subway\Station::dictOptions();
+        $items = \models\SubwayStation::dictOptions();
 
         return array_map(function ($d) {
             unset($d['code']);

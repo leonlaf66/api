@@ -26,11 +26,11 @@ class SearchGeneral
     public static function applySearchText($q, $search)
     {
         if ($q && strlen($q) > 0) {
-            $town = \common\catalog\Town::searchKeywords($q);
+            $town = \models\Town::searchKeywords($q);
             if ($town) { // 城市
                 $search->query->andWhere(['town' => $town->short_name]);
             } else {
-                $zipcode = \common\catalog\Zipcode::searchKeywords($q);
+                $zipcode = \models\ZipcodeTown::searchKeywords($q);
                 if ($zipcode) { // zip
                     $search->query->andWhere(['town' => $zipcode->city_short_name]);
                 } else { // 普通搜索

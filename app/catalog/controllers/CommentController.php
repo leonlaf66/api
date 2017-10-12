@@ -2,8 +2,8 @@
 namespace module\catalog\controllers;
 
 use WS;
-use \common\comment\CommentPage;
-use \common\comment\Comment;
+use models\CommentPage;
+use models\Comment;
 
 class CommentController extends \deepziyu\yii\rest\Controller
 {   
