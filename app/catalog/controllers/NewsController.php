@@ -2,7 +2,7 @@
 namespace module\catalog\controllers;
 
 use WS;
-use common\news\News;
+use models\News;
 
 class NewsController extends \deepziyu\yii\rest\Controller
 {   
