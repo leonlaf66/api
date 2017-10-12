@@ -21,7 +21,7 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
             
         }
 
-        $query = \common\customer\RetsFavorite::findByUserId(\WS::$app->user->id)
+        $query = \models\MemberHouseFavority::findByUserId(\WS::$app->user->id)
             ->where([
                 'user_id' => \WS::$app->user->id
             ])
@@ -81,7 +81,7 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
      */
     public function actionRemove($id)
     {
-        $item = \common\customer\RetsFavorite::findOne($id);
+        $item = \models\MemberHouseFavority::findOne($id);
         if ($item->user_id !== \WS::$app->user->id) {
             throw new \yii\web\HttpException(404, '不存在的收藏!');
         }

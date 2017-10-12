@@ -12,6 +12,6 @@ class ProfileController extends \deepziyu\yii\rest\Controller
      */
     public function actionGet()
     {
-        return \common\customer\Profile::findOne(\WS::$app->user->id);
+        return \models\MemberProfile::findOne(\WS::$app->user->id);
     }
 }
