@@ -47,7 +47,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
     {
         $accessToken = (new \yii\db\Query())
             ->select('access_token')
-            ->from('user')
+            ->from('member')
             ->where(['open_id' => $open_id])
             ->scalar();
 
@@ -66,7 +66,7 @@ class AccountController extends \deepziyu\yii\rest\Controller
             ];
 
             $result = WS::$app->db->createCommand()
-                ->insert('user', $data)
+                ->insert('member', $data)
                 ->execute();
         }
 
