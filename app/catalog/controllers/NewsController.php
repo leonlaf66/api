@@ -128,7 +128,7 @@ class NewsController extends \deepziyu\yii\rest\Controller
      */
     public function actionTypes($area_id = 'ma')
     {
-        return \common\core\TaxonomyTerm::typeOptions(3);
+        return \models\TaxonomyTerm::typeOptions(3);
     }
 
     /**

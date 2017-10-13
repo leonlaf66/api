@@ -161,7 +161,7 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      */
     public function actionTypes($area_id = 'ma')
     {
-        $items = \common\core\TaxonomyTerm::typeOptions(2);
+        $items = \models\TaxonomyTerm::typeOptions(2);
 
         $resultItems = [];
         foreach ($items as $id => $d) {
