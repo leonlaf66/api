@@ -64,6 +64,7 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
     /**
      * 删除房源预约
      * @desc 删除房源预约, 需要登陆，只能删除已登陆的用户的预约
+     * @param $id 需删除的看房预约ID
      * @return bool - 删除结果信息
      */
     public function actionRemove($id)

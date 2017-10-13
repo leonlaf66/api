@@ -77,6 +77,7 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
     /**
      * 删除房源收藏
      * @desc 删除房源收藏, 需要登陆，只能删除已登陆的用户的收藏
+     * @param $id 需删除的房源收藏ID
      * @return bool - 删除结果信息
      */
     public function actionRemove($id)
