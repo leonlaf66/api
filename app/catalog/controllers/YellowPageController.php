@@ -44,7 +44,6 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
         $search->pagination->pageSize = $page_size;
 
         $items = $search->getModels();
-        var_dump($items[0]->rating);exit;
         $items = array_map(function ($d) {
             return [
                 'id' => $d->id,
