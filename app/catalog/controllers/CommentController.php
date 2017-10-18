@@ -29,7 +29,7 @@ class CommentController extends \deepziyu\yii\rest\Controller
     {
         $commentPage = CommentPage::find()->where(['url' => "{$type}/{$id}"])->one();
         if (! $commentPage) {
-            return [];
+            return ['total' => 0, 'items' => []];
         }
 
         $commentQuery = $commentPage->getComments();
