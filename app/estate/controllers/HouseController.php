@@ -17,7 +17,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function authOptional()
     {
-        return ['search', 'map-search', 'get', 'search-options', 'school-district-options', 'top', 'hot-areas'];
+        return ['search', 'map-search', 'get', 'search-options', 'school-district-options', 'top', 'hot-areas', 'data'];
     }
 
     /**
@@ -146,7 +146,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $req = WS::$app->request;
 
         // search对象
-        $search = HouseIndex::search();
+        $search = HouseIndex::search(['MA']);
 
         // 搜索参数应用
         $townCodes = SearchMap::apply($req, $search);
@@ -371,5 +371,10 @@ class HouseController extends \deepziyu\yii\rest\Controller
         }
 
         return $resultItems;
+    }
+
+    public function actionData($id)
+    {
+        return \common\estate\Rets::findOne($id);
     }
 }
