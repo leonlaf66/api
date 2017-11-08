@@ -33,7 +33,7 @@ class SearchMap
     {
         $townCode = null;
         if ($q && strlen($q) > 0) {
-            $town = \models\Town::searchKeywords($q, 'MA');
+            $town = \models\Town::searchKeywords(ucwords($q), 'MA');
             if ($town) { // 城市
                 $search->query->andWhere(['town' => $town->short_name]);
                 $townCode = $town->short_name;

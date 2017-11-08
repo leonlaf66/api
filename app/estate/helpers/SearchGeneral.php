@@ -26,7 +26,7 @@ class SearchGeneral
     public static function applySearchText($q, $search)
     {
         if ($q && strlen($q) > 0) {
-            $town = \models\Town::searchKeywords($q);
+            $town = \models\Town::searchKeywords(ucwords($q));
             if ($town) { // 城市
                 $search->query->andWhere(['town' => $town->short_name]);
             } else {
