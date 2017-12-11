@@ -35,6 +35,8 @@ class App extends \common\supports\ApiApp
             WS::$app->area->initArea($areaId);
         } elseif ($areaId = \Yii::$app->request->headers->get('area-id')) {
             WS::$app->area->initArea($areaId);
+        } else {
+            WS::$app->area->initArea('ma');
         }
     }
 
