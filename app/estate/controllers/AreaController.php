@@ -19,13 +19,23 @@ class AreaController extends \deepziyu\yii\rest\Controller
             'ny' => [
                 'name' => tt('New York', '纽约'),
                 'desc' => tt('NYC, Long island, Brooklyn', '纽约市，长岛，布鲁克林'),
+                'image_url' => media_url('area/ny.jpg')
+            ],
+            'ga' => [
+                'name' => tt('Atlanta', '亚特兰大'),
+                'desc' => tt('Georgia', '佐治亚州'),
+                'image_url' => media_url('area/a.jpg')
+            ],
+            'ca' => [
+                'name' => tt('Los Angel', '洛杉矶'),
+                'desc' => tt('California', '加利福尼亚'),
                 'image_url' => media_url('area/b.jpg')
             ],
-            'va' => [
-                'name' => tt('Washington', '华盛顿'),
-                'desc' => tt('DC, MD, VA', '华盛顿DC，弗吉尼亚，马里兰'),
+            'il' => [
+                'name' => tt('Chicago', '芝加哥'),
+                'desc' => tt('Illinois', '伊利诺斯'),
                 'image_url' => media_url('area/c.jpg')
-            ]
+            ],
         ];
     }
 }
