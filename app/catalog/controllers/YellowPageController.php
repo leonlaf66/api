@@ -9,7 +9,6 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
     /**
      * 黄页列表
      * @desc 黄页列表
-     * @param string $area_id 区域id
      * @param number $city_id 城市id
      * @param number $type_id 类型id
      * @param number $page:f
@@ -17,9 +16,11 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
      * @return number total 黄页总数
      * @return [] items 黄页结果集合
      */
-    public function actionList($area_id = 'ma', $page = 1, $page_size = 25, $city_id = '', $type_id='')
+    public function actionList($page = 1, $page_size = 25, $city_id = '', $type_id='')
     {
-        $search = YellowPage::search();
+        $areaId = \WS::$app->area->id;
+
+        $search = YellowPage::search($areaId);
 
         // 应用城市过滤
         if ($city_id !== '') {
@@ -69,12 +70,12 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
     /**
      * 商家黄页推荐
      * @desc 商家黄页推荐
-     * @param string $area_id 区域ID
      * @return [] - 黄页结果集合
      */
-    public function actionRecommends($area_id = 'ma')
+    public function actionRecommends()
     {
-        $groups = \WS::getStaticData('home.yellowpage.top');
+        $areaId = \WS::$app->area->id;
+        $groups = \WS::getStaticData('home.yellowpage.top.'.$areaId);
 
         $ids = [];
         foreach($groups as $group) {
@@ -155,10 +156,9 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
     /**
      * 黄页类型列表获取
-     * @param string $area_id 区域id
      * @return [] - 类型集合
      */
-    public function actionTypes($area_id = 'ma')
+    public function actionTypes()
     {
         $items = \models\TaxonomyTerm::typeOptions(2);
 
@@ -181,11 +181,14 @@ class YellowPageController extends \deepziyu\yii\rest\Controller
 
     /**
      * 黄页城市列表获取
-     * @param string $area_id 区域id
      * @return [] - 城市集合
      */
-    public function actionCities($area_id = 'ma')
+    public function actionCities()
     {
+        $stateId = \WS::$app->area->getStateId();
+        if ($stateId !== 'MA') {
+            return \models\City::mapOptions($stateId);
+        }
         return \models\Town::mapOptions();
     }
 }

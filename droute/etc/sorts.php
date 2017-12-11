@@ -16,6 +16,7 @@ return [
     "/estate/house/get",
     "/estate/house/favorite",
     "/estate/house/tour",
+    "/estate/house/data",
     "/catalog/*",
     "/catalog/school-district/*",
     "/catalog/school-district/list",

@@ -31,10 +31,25 @@ class App extends \common\supports\ApiApp
 
     protected function initSite()
     {
-        $siteId = null;
-
         if ($areaId = WS::$app->request->get('area_id')) {
             WS::$app->area->initArea($areaId);
+        } elseif ($areaId = \Yii::$app->request->headers->get('area-id')) {
+            WS::$app->area->initArea($areaId);
         }
+    }
+
+    public function beforeAction($action)
+    {
+        if (in_array($this->controller->module->id, ['catalog', 'estate'])) {
+            if (is_null(WS::$app->area->id)) {
+                echo json_encode([
+                    'response' => [
+                        'code' => 403,
+                        'message' => '必须指定area_id'
+                    ]
+                ]);exit;
+            }
+        }
+        return parent::beforeAction($action);
     }
 }

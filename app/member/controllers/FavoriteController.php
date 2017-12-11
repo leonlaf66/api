@@ -38,12 +38,16 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
 
         $items = array_map(function ($d) {
             $e = $d->getRets();
-            $r = $e->render();
-            // $price = $r->get('list_price');
 
-            return [
+            $result = [
                 'id' => $d->id,
-                'house' => [
+                'house' => [],
+                'created_at' => $d->created_at
+            ];
+
+            if ($e instanceof \common\estate\Rets) {
+                $r = $e->render();
+                $result['house'] = [
                     'id' => $e->list_no,
                     'name' => $r->get('name')['value'],
                     'location' => $e->location,
@@ -63,9 +67,32 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
                     'status_name' => $e->statusName(),
                     'list_days_description' => $e->getListDaysDescription(),
                     'tags' => $e->getTags()
-                ],
-                'created_at' => $d->created_at
-            ];
+                ];
+            } elseif ($e instanceof \common\listhub\estate\House) {
+                $result['house'] = [
+                    'id' => $d->id,
+                    'name' => $e->title(),
+                    'location' => $e->getLocation(),
+                    'image' => $e->getPhoto(0)['url'],
+                    'images' => [
+                        $e->getPhoto(1)['url'],
+                        $e->getPhoto(2)['url'],
+                    ],
+                    'no_bedrooms' => $e->no_bedrooms,
+                    'no_full_baths' => $e->no_full_baths,
+                    'no_half_baths' => $e->no_half_baths,
+                    'square_feet' => $e->getFieldData('square_feet')['formatedValue'],
+                    'list_price' => $e->getFieldData('list_price')['formatedValue'],
+                    'prop_type_name' => $e->propTypeName(),
+                    'latitude' => $e->latitude,
+                    'longitude' => $e->longitude,
+                    'status_name' => $e->statusName(),
+                    'list_days_description' => $e->getListDaysDescription(),
+                    'tags' => $e->getTags()
+                ];
+            }
+
+            return $result;
         }, $items);
 
         return [

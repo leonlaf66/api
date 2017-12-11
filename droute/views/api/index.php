@@ -31,7 +31,7 @@
         body {
             padding-bottom:30px;
         }
-        .message {
+        .api-message {
             position:fixed;
             left:0;bottom:0;width:100%;
             background:#e40;
@@ -246,11 +246,15 @@
         .site-block .layui-form {
             margin-right: 200px;
         }
+
+        .site-tree-noicon.active > li > a{
+            color:#e00;
+        }
     </style>
 
 </head>
 <body>
-<div class="message">
+<div class="api-message">
     ** 强烈建议使用Google Chrome浏览器进行API测试，并安装 ModHeader 以及 JSONView 两个扩展, 并配置ModHeader的app-token及lanugage参数.
 </div>
 <div class="ui r" style="max-width: none !important;position: relative;z-index:0;">
@@ -258,10 +262,10 @@
         <ul class="layui-tree">
             <?php foreach ($routes as $id => $item): ?>
                 <?php if (preg_match('/\*$/', $id)): ?>
-                    <li><h2><a href="#<?= $id ?>"><?= $id ?></a></h2></li>
+                    <li><h2><a href="#<?= $id ?>" target="_blank"><?= $id ?></a></h2></li>
                 <?php else: ?>
                     <li class="site-tree-noicon <?= $id == '' ? 'layui-this' : '' ?>">
-                        <a href="#<?= $id ?>"><cite><?= $item['description'] ?></cite></a>
+                        <a href="#<?= $id ?>" target="_blank"><cite><?= $item['description'] ?></cite></a>
                     </li>
                 <?php endif; ?>
 

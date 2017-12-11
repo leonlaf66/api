@@ -2,7 +2,7 @@
 namespace module\member\controllers;
 
 class ScheduleController extends \deepziyu\yii\rest\Controller
-{   
+{
     public $enableAuth = true;
 
     /**
@@ -23,12 +23,18 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
 
         $items = array_map(function ($d) {
             $e = $d->getRets();
-            $r = $e->render();
-            $price = $r->get('list_price');
 
-            return [
+            $result = [
                 'id' => $d->id,
-                'house' => [
+                'house' => [],
+                'date_start' => $d->date_start,
+                'date_end' => $d->date_end,
+                'status' => $d->status
+            ];
+
+            if ($e instanceof \common\estate\Rets) {
+                $r = $e->render();
+                $result['house'] = [
                     'id' => $e->list_no,
                     'name' => $r->get('name')['value'],
                     'location' => $e->location,
@@ -48,11 +54,32 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
                     'status_name' => $e->statusName(),
                     'list_days_description' => $e->getListDaysDescription(),
                     'tags' => $e->getTags()
-                ],
-                'date_start' => $d->date_start,
-                'date_end' => $d->date_start,
-                'status' => $d->status
-            ];
+                ];
+            } elseif ($e instanceof \common\listhub\estate\House) {
+                $result['house'] = [
+                    'id' => $d->id,
+                    'name' => $e->title(),
+                    'location' => $e->getLocation(),
+                    'image' => $e->getPhoto(0)['url'],
+                    'images' => [
+                        $e->getPhoto(1)['url'],
+                        $e->getPhoto(2)['url'],
+                    ],
+                    'no_bedrooms' => $e->no_bedrooms,
+                    'no_full_baths' => $e->no_full_baths,
+                    'no_half_baths' => $e->no_half_baths,
+                    'square_feet' => $e->getFieldData('square_feet')['formatedValue'],
+                    'list_price' => $e->getFieldData('list_price')['formatedValue'],
+                    'prop_type_name' => $e->propTypeName(),
+                    'latitude' => $e->latitude,
+                    'longitude' => $e->longitude,
+                    'status_name' => $e->statusName(),
+                    'list_days_description' => $e->getListDaysDescription(),
+                    'tags' => $e->getTags()
+                ];
+            }
+
+            return $result;
         }, $items);
 
         return [
@@ -73,7 +100,7 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
         if ($item->user_id !== \WS::$app->user->id) {
             throw new \yii\web\HttpException(404, '不存在的预约!');
         }
-        
+
         return $item->delete();
     }
 }

@@ -23,7 +23,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 房源搜索
      * @desc 房源搜索
-     * @param string $area_id 区域id
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
@@ -32,10 +31,14 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param number $page_size 指定分页大小
      * @return [] - 查询结果, 查看<a href="/help?house-search-results" target="_blank">Results格式</a>
      */
-    public function actionSearch($area_id = 'ma', $type = 'purchase', $q = '', $order = 0, $page = 1, $page_size = 15)
+    public function actionSearch($type = 'purchase', $q = '', $order = 0, $page = 1, $page_size = 15)
     {
         // 请求参数
         $req = WS::$app->request;
+
+        if (\WS::$app->area->id !== 'ma') {
+            return \module\listhub\estate\controllers\House::search($this, $req);
+        }
 
         // search对象
         $search = HouseIndex::search();
@@ -95,14 +98,17 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 推荐房源
      * @desc 用于app首页的推荐房源列表
-     * @param string $area_id 区域id
      * @param number $limit 只返回多少条
      * @return [] - 查询结果
      */
     public function actionTop($limit = 10)
     {
-        $houses = [];
+        $req = \WS::$app->request;
+        if (\WS::$app->area->id !== 'ma') {
+            return \module\listhub\estate\controllers\House::top($this, $req);
+        }
 
+        $houses = [];
         $groups = \WS::getStaticData('home.rets.top');
         foreach ($groups as $items) {
             foreach ($items as $item) {
@@ -132,7 +138,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 地图房源搜索
      * @desc 地图房源搜索
-     * @param string $area_id 区域id
      * @param string $type 售房:purchase, 租房: lease, 默认为售房
      * @param string $q 搜索关键词(支持中/英文城市名, zipcode, 房源号, 以及全文搜索)
      * @param [] $filters:f 筛选器，查看<a href="/help?house-search-filters" target="_blank">Filters格式</a>
@@ -140,33 +145,39 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @return [] items 查询结果
      * @return [] polygons 区域边界
      */
-    public function actionMapSearch($area_id = 'ma', $type = 'purchase', $q = '', $limit=4000)
+    public function actionMapSearch($type = 'purchase', $q = '', $limit=4000)
     {
         // 请求参数
         $req = WS::$app->request;
 
-        // search对象
-        $search = HouseIndex::search(['MA']);
+        if (\WS::$app->area->id !== 'ma') {
+            return \module\listhub\estate\controllers\House::mapSearch($this, $req);
+        }
+
+        $query = (new \yii\db\Query())
+            ->from('house_index')
+            ->select('id, list_price, prop_type, latitude, longitude')
+            ->where([
+                'state' => 'MA',
+                'is_show' => true
+            ])
+            ->limit($limit);
 
         // 搜索参数应用
-        $townCodes = SearchMap::apply($req, $search);
-
-        // 限制总返回数量
-        $search->query->limit($limit);
+        $townCodes = SearchMap::apply($req, $query);
 
         // 获取真实结果
-        $search->query->select('id, list_price, prop_type, latitude, longitude');
-        $results = $search->query->all();
+        $houses = $query->all();
 
         // 构造结果
         $items = [];
-        foreach ($results as $d) {
+        foreach ($houses as $d) {
             $items[] = implode('|', [
-                $d->id,
-                $d->list_price * 1.0 / 10000,
-                $d->prop_type,
-                $d->latitude,
-                $d->longitude
+                $d['id'],
+                $d['list_price'] * 1.0 / 10000,
+                $d['prop_type'],
+                $d['latitude'],
+                $d['longitude']
             ]);
         }
 
@@ -195,6 +206,11 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function actionGet($id, $simple = '0')
     {
+        $req = \WS::$app->request;
+        if (\WS::$app->area->id !== 'ma') {
+            return \module\listhub\estate\controllers\House::get($this, $req);
+        }
+
         $rets = \common\estate\Rets::findOne($id);
         
         if(is_null($rets )) {
@@ -306,14 +322,18 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
     /**
      * 搜索选项待选列表
-     * @param string $area_id 区域id
      * @desc 搜索选项待选列表
      * @return [] - 待选列表
      */
-    public function actionSearchOptions($area_id = 'ma')
+    public function actionSearchOptions()
     {
-        $resultItems = [];
+        $req = \WS::$app->request;
 
+        if (\WS::$app->area->id !== 'ma') {
+            return \module\listhub\estate\controllers\House::searchOptions($this, $req);
+        }
+
+        $resultItems = [];
         $towns = \models\Town::find()->where([
             'state'=>'MA'
         ])->all();
@@ -349,11 +369,16 @@ class HouseController extends \deepziyu\yii\rest\Controller
     /**
      * 热门区域
      * @desc 房源热门区域，可以应用到房源搜索的filters条件中
-     * @param string $area_id 区域id
      * @return [] - 区域列表
      */
     public function actionHotAreas()
     {
+        $req = \WS::$app->request;
+
+        if (\WS::$app->area->id !== 'ma') {
+            return \module\listhub\estate\controllers\House::hotAreas($this, $req);
+        }
+
         $names = ['Malden', 'Cambridge', 'Lexington', 'Newton', 'Brookline', 'Waltham', 'Boston', 'Arlington', 'Quincy'];
         $items = \models\Town::find()
             ->where(['state' => 'MA'])
@@ -375,6 +400,10 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
     public function actionData($id)
     {
+        if (\WS::$app->area->id !== 'ma') {
+            return \models\listhub\HouseIndex::findOne($id);
+        }
+
         return \common\estate\Rets::findOne($id);
     }
 }
