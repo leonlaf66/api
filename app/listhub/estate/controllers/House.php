@@ -71,7 +71,12 @@ class House
                 'images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'small_images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'taxes' => $rets->getFieldData('taxes'),
-                'roi' => [],//DetailHelper::fetchRoi($rets),
+                'roi' => [
+                    'est_roi_cash' => '0.00%',
+                    'ave_roi_cash' => '0.00%',
+                    'est_annual_income_cash' => '$0.00',
+                    'ave_annual_income_cash' => '$0.00'
+                ],//DetailHelper::fetchRoi($rets),
                 'details' => $rets->getDetail(),
                 'recommend_houses' => $rets->recommends($area->id),
                 'polygons' => $rets->getPolygons()
