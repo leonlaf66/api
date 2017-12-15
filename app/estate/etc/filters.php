@@ -1,55 +1,55 @@
 <?php
 return [
-    'latlon' => function ($vals, $search) {
+    'latlon' => function ($vals, $query) {
         list($lat, $lon) = explode(',', $vals);
-        $search->query->andWhere('earth_box(ll_to_earth(latitude, longitude),2000) @> ll_to_earth(:lat, :lon)', [':lat' => $lat, ':lon' => $lon]);
+        $query->andWhere('earth_box(ll_to_earth(latitude, longitude),2000) @> ll_to_earth(:lat, :lon)', [':lat' => $lat, ':lon' => $lon]);
     },
     'city_code' => function ($code, $search) {
         $code = strtoupper($code);
         $search->query->andWhere(['=', 'town', $code]);
     },
-    'list_price' => function ($range, $search) {
+    'list_price' => function ($range, $query) {
         list($start, $end) = array_values(array_merge([
             'from' => 0,
             'to' => 9999999999
         ], $range));
 
-        $search->query->andWhere(['>', 'list_price', $start]);
-        $search->query->andWhere(['<', 'list_price', $end]);
+        $query->andWhere(['>', 'list_price', $start]);
+        $query->andWhere(['<', 'list_price', $end]);
     },
-    'prop-type' => function ($types, $search) {
-        $search->query->andWhere(['in', 'prop_type', $types]);
+    'prop-type' => function ($types, $query) {
+        $query->andWhere(['in', 'prop_type', $types]);
     },
-    'square' => function ($range, $search) {
+    'square' => function ($range, $query) {
         list($start, $end) = array_values(array_merge([
             'from' => 0,
             'to' => 9999999999
         ], $range));
 
-        $search->query->andWhere(['>', 'square_feet', $start]);
-        $search->query->andWhere(['<', 'square_feet', $end]);
+        $query->andWhere(['>', 'square_feet', $start]);
+        $query->andWhere(['<', 'square_feet', $end]);
     },
-    'beds' => function ($val, $search) {
+    'beds' => function ($val, $query) {
         $val = intval($val);
-        $search->query->andWhere(['>=', 'no_bedrooms', $val]);
+        $query->andWhere(['>=', 'no_bedrooms', $val]);
     },
-    'baths' => function ($val, $search) {
+    'baths' => function ($val, $query) {
         $val = intval($val);
-        $search->query->andWhere(['>=', 'no_bathrooms', $val]);
+        $query->andWhere(['>=', 'no_bathrooms', $val]);
     },
-    'parking' => function ($val, $search) {
+    'parking' => function ($val, $query) {
         $val = intval($val);
-        $search->query->andWhere(['>=', 'parking_spaces', $val]);
+        $query->andWhere(['>=', 'parking_spaces', $val]);
     },
-    'agrage' => function ($val, $search) {
+    'agrage' => function ($val, $query) {
         $val = intval($val);
         if ($val === 1) {
-            $search->query->andWhere(['>', 'garage_spaces', 0]);
+            $query->andWhere(['>', 'garage_spaces', 0]);
         } else {
-            $search->query->andWhere(['=', 'garage_spaces', 0]);
+            $query->andWhere(['=', 'garage_spaces', 0]);
         }
     },
-    'market-days' => function ($val, $search) {
+    'market-days' => function ($val, $query) {
         if($value !== '') {
             $getRangeFns = [
                 '1'=>function(){
@@ -71,22 +71,22 @@ return [
                 list($start, $end) = $getRangeFn();
                 $start = date('Y-m-d', $start);
                 $end = date('Y-m-d', $end);
-                $search->query->andWhere('list_date>=:start and list_date <=:end', [
+                $query->andWhere('list_date>=:start and list_date <=:end', [
                     ':start'=>$start,
                     ':end'=>$end
                 ]);
             }
         }
     },
-    'school_district' => function ($townCode, $search) {
+    'school_district' => function ($townCode, $query) {
         $townCodes = explode('/', strtoupper($townCode));
-        $search->query->andWhere(['in', 'town', $townCodes]);
+        $query->andWhere(['in', 'town', $townCodes]);
         return $townCodes;
     },
-    'subway_line' => function ($lineId, $search) {
-        $search->query->andWhere(['@>', 'subway_lines', '{'.strtoupper($lineId).'}']);
+    'subway_line' => function ($lineId, $query) {
+        $query->andWhere(['@>', 'subway_lines', '{'.strtoupper($lineId).'}']);
     },
-    'subway_stations' => function ($stationIds, $search) {
-        $search->query->andWhere(['&&', 'subway_stations', '{'.implode(',', $stationIds).'}']);
+    'subway_stations' => function ($stationIds, $query) {
+        $query->andWhere(['&&', 'subway_stations', '{'.implode(',', $stationIds).'}']);
     }
 ];
