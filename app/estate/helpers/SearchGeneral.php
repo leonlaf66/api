@@ -3,60 +3,60 @@ namespace module\estate\helpers;
 
 class SearchGeneral
 {
-    public static function apply($req, $search) {
+    public static function apply($req, $query) {
         // 应用售/租房
-        self::applyType($req->get('type', 'purchase'), $search);
+        self::applyType($req->get('type', 'purchase'), $query);
         // 应用q搜索
-        self::applySearchText($req->get('q', ''), $search);
+        self::applySearchText($req->get('q', ''), $query);
         // 应用筛选
-        self::applyFilters($req->get('filters', []), $search);
+        self::applyFilters($req->get('filters', []), $query);
         // 应用排序
-        self::applySortOrder($req->get('order', '0'), $search);
+        self::applySortOrder($req->get('order', '0'), $query);
     }
 
-    public static function applyType($type, $search)
+    public static function applyType($type, $query)
     {
         if ($type === 'lease') {
-            $search->query->andFilterWhere(['=', 'prop_type', 'RN']);
+            $query->andWhere(['=', 'prop_type', 'RN']);
         } else {
-            $search->query->andFilterWhere(['<>', 'prop_type', 'RN']);
+            $query->andWhere(['<>', 'prop_type', 'RN']);
         }
     }
 
-    public static function applySearchText($q, $search)
+    public static function applySearchText($q, $query)
     {
         if ($q && strlen($q) > 0) {
             $town = \models\Town::searchKeywords(ucwords($q));
             if ($town) { // 城市
-                $search->query->andWhere(['town' => $town->short_name]);
+                $query->andWhere(['town' => $town->short_name]);
             } else {
                 $zipcode = \models\ZipcodeTown::searchKeywords($q);
                 if ($zipcode) { // zip
-                    $search->query->andWhere(['town' => $zipcode->city_short_name]);
+                    $query->andWhere(['town' => $zipcode->city_short_name]);
                 } else { // 普通搜索
                     $qWhere = "to_tsvector('english', location) @@ plainto_tsquery('english', '{$q}')";
-                    $search->query->andWhere($qWhere);
+                    $query->andWhere($qWhere);
                 }
             }
 
             if (is_numeric($q)) { // mls id
-                $search->query->orWhere(['id' => $q]);
+                $query->orWhere(['id' => $q]);
             }
         }
     }
 
-    public static function applyFilters($filters, $search)
+    public static function applyFilters($filters, $query)
     {
         $filterRules = include(dirname(__DIR__).'/etc/filters.php');
 
         foreach ($filters as $field => $value) {
             if (isset($filterRules[$field])) {
-                ($filterRules[$field])($value, $search);
+                ($filterRules[$field])($value, $query);
             }
         }
     }
 
-    public static function applySortOrder($type, $search)
+    public static function applySortOrder($type, $query)
     {
         $maps = [
             '0' => ['list_date' => SORT_DESC, 'id' => SORT_DESC],
@@ -68,6 +68,6 @@ class SearchGeneral
 
         if (! isset($maps[$type])) $type = '0';
 
-        $search->query->orderBy($maps[$type]);
+        $query->orderBy($maps[$type]);
     }
 }
