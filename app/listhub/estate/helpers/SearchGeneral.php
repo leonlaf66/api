@@ -3,57 +3,57 @@ namespace module\listhub\estate\helpers;
 
 class SearchGeneral
 {
-    public static function apply($req, $search) {
+    public static function apply($req, $query) {
         // 应用售/租房
-        self::applyType($req->get('type', 'purchase'), $search);
+        self::applyType($req->get('type', 'purchase'), $query);
         // 应用q搜索
-        self::applySearchText($req->get('q', ''), $search);
+        self::applySearchText($req->get('q', ''), $query);
         // 应用筛选
-        self::applyFilters($req->get('filters', []), $search);
+        self::applyFilters($req->get('filters', []), $query);
         // 应用排序
-        self::applySortOrder($req->get('order', '0'), $search);
+        self::applySortOrder($req->get('order', '0'), $query);
     }
 
-    public static function applyType($type, $search)
+    public static function applyType($type, $query)
     {
         if ($type === 'lease') {
-            $search->query->andFilterWhere(['=', 'prop_type', 'RN']);
+            $query->andWhere(['=', 'prop_type', 'RN']);
         } else {
-            $search->query->andFilterWhere(['<>', 'prop_type', 'RN']);
+            $query->andWhere(['<>', 'prop_type', 'RN']);
         }
     }
 
-    public static function applySearchText($q, $search)
+    public static function applySearchText($q, $query)
     {
         if (! empty($q)) {
             if (is_numeric($q) && strlen($q) === 5) {
-                $search->query->andWhere(['zip_code' => $q]);
+                $query->andWhere(['zip_code' => $q]);
             } elseif (preg_match('/[a-zA-Z]{0,2}[0-9]{5,10}/', $q)) {
-                $search->query->andWhere(['id' => $q]);
+                $query->andWhere(['id' => $q]);
             } else {
                 $cityName = ucwords($q);
                 $city = \models\City::findByName(\WS::$app->area->stateId, $cityName);
                 if ($city) {
-                    $search->query->andWhere(['city_id' => $city->id]);
+                    $query->andWhere(['city_id' => $city->id]);
                 } else {
-                    $search->query->where('1=2');
+                    $query->where('1=2');
                 }
             }
         }
     }
 
-    public static function applyFilters($filters, $search)
+    public static function applyFilters($filters, $query)
     {
         $filterRules = include(dirname(__DIR__).'/etc/filters.php');
 
         foreach ($filters as $field => $value) {
             if (isset($filterRules[$field])) {
-                ($filterRules[$field])($value, $search);
+                ($filterRules[$field])($value, $query);
             }
         }
     }
 
-    public static function applySortOrder($type, $search)
+    public static function applySortOrder($type, $query)
     {
         $maps = [
             '0' => ['list_date' => SORT_DESC, 'id' => SORT_DESC],
@@ -65,6 +65,6 @@ class SearchGeneral
 
         if (! isset($maps[$type])) $type = '0';
 
-        $search->query->orderBy($maps[$type]);
+        $query->orderBy($maps[$type]);
     }
 }

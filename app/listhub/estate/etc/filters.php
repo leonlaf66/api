@@ -5,7 +5,7 @@ return array_merge($baseFilters, [
     'city_code' => function ($cityCode, $query) {
         // disabled
     },
-    'city_id' => function ($cityId, $search) {
+    'city_id' => function ($cityId, $query) {
         $query->andWhere(['=', 'city_id', $cityId]);
     },
     'agrage' => function ($val, $search) {

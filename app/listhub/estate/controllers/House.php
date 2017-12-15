@@ -15,7 +15,7 @@ class House
         $search = \common\listhub\estate\House::search(\WS::$app->area->stateId);
 
         // 搜索参数应用
-        SearchGeneral::apply($req, $search);
+        SearchGeneral::apply($req, $search->query);
 
         // 分页处理
         $search->pagination->setPage(intval($page) - 1);
