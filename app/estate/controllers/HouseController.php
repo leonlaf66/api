@@ -253,6 +253,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'latitude' => $rets->latitude,
                 'longitude' => $rets->longitude,
                 'images' => $rets->getPhotos($options['image']['width'], $options['image']['height']),
+                'taxes' => $render->get('taxes'),
                 'small_images' => $rets->getPhotos($options['small_image']['width'], $options['small_image']['height']),
                 'roi' => DetailHelper::fetchRoi($rets),
                 'details' => DetailHelper::fetchDetail($rets),

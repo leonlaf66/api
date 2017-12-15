@@ -70,6 +70,7 @@ class House
                 'longitude' => $rets->longitude,
                 'images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'small_images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
+                'taxes' => $rets->getFieldData('taxes'),
                 'roi' => [],//DetailHelper::fetchRoi($rets),
                 'details' => $rets->getDetail(),
                 'recommend_houses' => $rets->recommends($area->id),
