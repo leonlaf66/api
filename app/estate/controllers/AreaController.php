@@ -24,17 +24,17 @@ class AreaController extends \deepziyu\yii\rest\Controller
             'ga' => [
                 'name' => tt('Atlanta', '亚特兰大'),
                 'desc' => tt('Georgia', '佐治亚州'),
-                'image_url' => media_url('area/a.jpg')
+                'image_url' => media_url('area/ga.jpg')
             ],
             'ca' => [
                 'name' => tt('Los Angel', '洛杉矶'),
                 'desc' => tt('California', '加利福尼亚'),
-                'image_url' => media_url('area/b.jpg')
+                'image_url' => media_url('area/ca.jpg')
             ],
             'il' => [
                 'name' => tt('Chicago', '芝加哥'),
                 'desc' => tt('Illinois', '伊利诺斯'),
-                'image_url' => media_url('area/c.jpg')
+                'image_url' => media_url('area/il.jpg')
             ],
         ];
     }
