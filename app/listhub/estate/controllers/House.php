@@ -109,6 +109,8 @@ class House
             ->from('listhub_index')
             ->select('id, list_price, prop_type, latitude, longitude')
             ->where(['state' => $stateId])
+            ->andWhere('latitude is not null and longitude is not null')
+            ->andWhere(['is_show' => true])
             ->limit($limit);
 
         // 搜索参数应用
