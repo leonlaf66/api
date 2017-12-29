@@ -34,7 +34,7 @@ class SearchGeneral
                 $cityName = ucwords($q);
                 $city = \models\City::findByName(\WS::$app->area->stateId, $cityName);
                 if ($city) {
-                    $query->andWhere(['city_id' => $city->id]);
+                    $query->andWhere(['city_id=:city_id or parent_city_id=:city_id', [':city_id' => $city->id]);
                 } else {
                     $query->where('1=2');
                 }
