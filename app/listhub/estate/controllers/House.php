@@ -110,6 +110,7 @@ class House
             ->select('id, list_price, prop_type, latitude, longitude')
             ->where(['state' => $stateId])
             ->andWhere('latitude is not null and longitude is not null')
+            ->andWhere('list_price>0')
             ->andWhere(['is_show' => true])
             ->limit($limit);
 
