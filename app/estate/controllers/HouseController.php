@@ -44,7 +44,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $search = HouseIndex::search();
 
         // 搜索参数应用
-        //SearchGeneral::apply($req, $search->query);
+        SearchGeneral::apply($req, $search->query);
 
         // 分页处理
         $search->pagination->setPage(intval($page) - 1);
