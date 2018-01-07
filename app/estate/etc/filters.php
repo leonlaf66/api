@@ -4,9 +4,9 @@ return [
         list($lat, $lon) = explode(',', $vals);
         $query->andWhere('earth_box(ll_to_earth(latitude::numeric, longitude::numeric),2000) @> ll_to_earth(:lat, :lon)', [':lat' => $lat, ':lon' => $lon]);
     },
-    'city_code' => function ($code, $search) {
+    'city_code' => function ($code, $query) {
         $code = strtoupper($code);
-        $search->query->andWhere(['=', 'town', $code]);
+        $query->andWhere(['=', 'town', $code]);
     },
     'list_price' => function ($range, $query) {
         list($start, $end) = array_values(array_merge([
