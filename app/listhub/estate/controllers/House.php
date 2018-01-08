@@ -200,13 +200,11 @@ class House
         $areaId = \WS::$app->area->id;
         $limit = $req->get('limit', 10);
 
-        $houses = [];
-        $groups = \WS::getStaticData('home.rets.top.'.$areaId, []);
-        foreach ($groups as $items) {
-            foreach ($items as $item) {
-                if ($rets = \common\listhub\estate\House::findOne($item['list_no'])) {
-                    $houses[] = \module\listhub\estate\helpers\ListResult::renderItem($rets);
-                }
+        $items = \models\SiteSetting::get('home.luxury.houses', $areaId);
+
+        foreach ($items as $item) {
+            if ($rets = \common\listhub\estate\House::findOne($item['id'])) {
+                $houses[] = \module\listhub\estate\helpers\ListResult::renderItem($rets);
             }
         }
 

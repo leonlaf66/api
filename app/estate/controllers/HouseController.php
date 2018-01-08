@@ -108,27 +108,28 @@ class HouseController extends \deepziyu\yii\rest\Controller
             return \module\listhub\estate\controllers\House::top($this, $req);
         }
 
-        $houses = [];
-        $groups = \WS::getStaticData('home.rets.top');
-        foreach ($groups as $items) {
-            foreach ($items as $item) {
-                if ($rets = \common\estate\Rets::findOne($item['list_no'])) {
-                    $render = $rets->render();
-                    $houses[] = [
-                        'id' => $rets->list_no,
-                        'name' => $render->get('name')['value'],
-                        'location' => $rets->getLocation(),
-                        'prop_type_name' => $rets->propTypeName(),
-                        'list_price' => $render->get('list_price')['formatedValue'],
-                        'image' => $rets->getPhoto(0, 800, 800),
-                        'no_bedrooms' => intval($rets->no_bedrooms),
-                        'no_full_baths' => intval($rets->no_full_baths),
-                        'no_half_baths' => intval($rets->no_half_baths),
-                        'square_feet' => $render->get('square_feet')['formatedValue'],
-                        'status_name' => $rets->statusName(),
-                        'list_days_description' => $rets->getListDaysDescription(),
-                    ];
-                }
+        $items = \models\SiteSetting::get('home.luxury.houses', 'ma');
+        foreach ($items as $item) {
+            if ($rets = \common\estate\Rets::findOne($item['id'])) {
+                $render = $rets->render();
+                $houses[] = [
+                    'id' => $rets->list_no,
+                    'name' => $render->get('name')['value'],
+                    'location' => $rets->getLocation(),
+                    'prop_type_name' => $rets->propTypeName(),
+                    'list_price' => $render->get('list_price')['formatedValue'],
+                    'image' => $rets->getPhoto(0, 800, 800),
+                    'images' => [
+                        $rets->getPhoto(1, 600, 600),
+                        $rets->getPhoto(2, 600, 600)
+                    ],
+                    'no_bedrooms' => intval($rets->no_bedrooms),
+                    'no_full_baths' => intval($rets->no_full_baths),
+                    'no_half_baths' => intval($rets->no_half_baths),
+                    'square_feet' => $render->get('square_feet')['formatedValue'],
+                    'status_name' => $rets->statusName(),
+                    'list_days_description' => $rets->getListDaysDescription(),
+                ];
             }
         }
 
