@@ -165,10 +165,10 @@ class House
         $area = \WS::$app->area;
 
         $hotCities = [
-            'ny' => ['Lagrangeville', 'Watertown', 'Hollis'],
-            'il' => [],
-            'ga' => [],
-            'ca' => []
+            'ny' => ['Great Nect', 'Jericho', 'Manhasset', 'Syosset', 'New Hyde Park', 'Garden City'],
+            'il' => ['Chicago', 'Winnetka', 'Hinsdale', 'Clarendon Hills', 'Buffalo Grove'],
+            'ga' => ['Atlanta', 'Johns Creek', 'Decatur', 'Alpharetta'],
+            'ca' => ['Los Angeles', 'Santa Monica', 'Irvine', 'Temecula', 'San Marino', 'Palos Verdes Estates']
         ];
 
         $names = $hotCities[$area->id];
