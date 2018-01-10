@@ -13,7 +13,6 @@ class House
         $page_size = $req->get('page_size', 15);
 
         $search = \common\listhub\estate\House::search(\WS::$app->area->stateId);
-        $search->andWhere(['>', ])
 
         // 搜索参数应用
         SearchGeneral::apply($req, $search->query);
