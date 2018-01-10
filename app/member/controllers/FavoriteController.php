@@ -70,7 +70,7 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
                 ];
             } elseif ($e instanceof \common\listhub\estate\House) {
                 $result['house'] = [
-                    'id' => $d->id,
+                    'id' => $d->list_no,
                     'name' => $e->title(),
                     'location' => $e->getLocation(),
                     'image' => $e->getPhoto(0)['url'],
