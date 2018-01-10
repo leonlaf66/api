@@ -13,6 +13,7 @@ class House
         $page_size = $req->get('page_size', 15);
 
         $search = \common\listhub\estate\House::search(\WS::$app->area->stateId);
+        $search->andWhere(['>', ])
 
         // 搜索参数应用
         SearchGeneral::apply($req, $search->query);
@@ -70,7 +71,7 @@ class House
                 'longitude' => $rets->longitude,
                 'images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'small_images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
-                'taxes' => $rets->getFieldData('taxes'),
+                'taxes' => intval(intval($rets->getFieldData('taxes'))),
                 'roi' => [
                     'est_roi_cash' => '0.00%',
                     'ave_roi_cash' => '0.00%',
