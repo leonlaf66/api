@@ -71,7 +71,7 @@ class House
                 'longitude' => $rets->longitude,
                 'images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'small_images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
-                'taxes' => intval(intval($rets->getFieldData('taxes'))),
+                'taxes' => $rets->getFieldData('taxes'),
                 'roi' => [
                     'est_roi_cash' => '0.00%',
                     'ave_roi_cash' => '0.00%',
