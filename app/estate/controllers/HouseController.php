@@ -59,7 +59,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 $r = $rets->render();
                 $items[] = [
                     'id' => $rets->list_no,
-                    'name' => $r->get('name')['value'],
+                    'name' => $rets->title(),
                     'location' => $rets->location,
                     'image' => $rets->getPhoto(0, 800, 800),
                     'images' => [
@@ -114,7 +114,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 $render = $rets->render();
                 $houses[] = [
                     'id' => $rets->list_no,
-                    'name' => $render->get('name')['value'],
+                    'name' => $rets->title(),
                     'location' => $rets->getLocation(),
                     'prop_type_name' => $rets->propTypeName(),
                     'list_price' => $render->get('list_price')['formatedValue'],
@@ -159,7 +159,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
             ->from('house_index')
             ->select('id, list_price, prop_type, latitude, longitude')
             ->where([
-                'state' => 'MA',
                 'is_show' => true
             ])
             ->limit($limit);
@@ -239,7 +238,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
             return [
                 'id' => $rets->list_no,
-                'name' => $render->get('name')['value'],
+                'name' => $rets->title(),
                 'location' => $rets->getLocation(),
                 'list_price' => $render->get('list_price')['formatedValue'],
                 'prop_type_name' => $render->get('prop_type_name')['value'],
@@ -264,7 +263,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         } else {
             return [
                 'id' => $rets->list_no,
-                'name' => $render->get('name')['value'],
+                'name' => $rets->title(),
                 'location' => $rets->getLocation(),
                 'list_price' => $render->get('list_price')['formatedValue'],
                 'prop_type_name' => $render->get('prop_type_name')['value'],
