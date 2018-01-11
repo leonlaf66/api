@@ -52,6 +52,8 @@ class House
         }
 
         if ($simple === '0') {
+            $recommendHouses = $rets->recommends($area->id);
+            $recommendHouses = \module\listhub\estate\helpers\ListResult::renderItems($recommendHouses);
             return [
                 'id' => $rets->id,
                 'name' => $rets->title(),
@@ -78,7 +80,7 @@ class House
                     'ave_annual_income_cash' => '$0.00'
                 ],//DetailHelper::fetchRoi($rets),
                 'details' => $rets->getDetail(),
-                'recommend_houses' => $rets->recommends($area->id),
+                'recommend_houses' => $recommendHouses,
                 'polygons' => $rets->getPolygons()
             ];
         } else {
