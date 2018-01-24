@@ -137,6 +137,12 @@ class NewsController extends \deepziyu\yii\rest\Controller
      */
     public function actionListTopBanner()
     {
-        return \WS::getStaticData('app.news.banner.top.'.\WS::$app->area->id, []);
+        $results = \models\SiteSetting::get('app.news.banner.top', \WS::$app->area->id);
+        $items = $results['childrens'] ?? [];
+        return array_map(function ($item) {
+            $item['news_id'] = trim($item['url'], '#');
+            unset($item['url']);
+            return $item;
+        }, $items);
     }
 }   
