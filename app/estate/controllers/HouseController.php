@@ -311,6 +311,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
             $tour->list_no = $id;
             $tour->date_start = $req->post('day').' '.$req->post('time_start') . ':00';
             $tour->date_end = $req->post('day').' '.$req->post('time_end') . ':00';
+            $tour->area_id = \WS::$app->area->id;
             if ($tour->validate()) {
                 $result = $tour->save();
             } else {
