@@ -73,6 +73,7 @@ class House
                 'images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'small_images' => array_map(function ($po) {return $po['url'];}, $rets->getPhotos()),
                 'taxes' => $rets->getFieldData('taxes'),
+                'est_sale' => null,
                 'roi' => [
                     'est_roi_cash' => '0.00%',
                     'ave_roi_cash' => '0.00%',
