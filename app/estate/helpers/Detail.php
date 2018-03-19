@@ -32,6 +32,13 @@ class Detail
         $aveResult = WS::$app->db->createCommand('select * from zipcode_roi_ave where "ZIP_CODE"=:zip', [
                 ':zip' => $zipCode
             ])->queryOne();
+        if (! $aveResult) {
+            $aveResult = [
+                'AVE_ROI_CASH' => null,
+                'AVE_ANNUAL_INCOME_CASH' => null
+            ];
+        }
+
         $aveResult['AVE_ROI_CASH'] *= 100;
 
         $result = array_merge($result, $aveResult);
@@ -39,14 +46,42 @@ class Detail
         unset($result['AVE_ROI_MORTGAGE']);
         unset($result['AVE_ANNUAL_INCOME_MORTGAGE']);
 
-        $result['EST_ROI_CASH'] = number_format($result['EST_ROI_CASH'], 2).'%';
-        $result['AVE_ROI_CASH'] = number_format($result['AVE_ROI_CASH'], 2).'%';
-        if (WS::$app->language === 'en-US') {
-            $result['EST_ANNUAL_INCOME_CASH'] = '$'.number_format($result['EST_ANNUAL_INCOME_CASH'], 2);
-            $result['AVE_ANNUAL_INCOME_CASH'] = '$'.number_format($result['AVE_ANNUAL_INCOME_CASH'], 2);
+        if ($result['EST_ROI_CASH']) {
+            $result['EST_ROI_CASH'] = number_format($result['EST_ROI_CASH'], 2).'%';
         } else {
-            $result['EST_ANNUAL_INCOME_CASH'] = number_format($result['EST_ANNUAL_INCOME_CASH'] * 1.0 / 10000, 2).'万美元';
-            $result['AVE_ANNUAL_INCOME_CASH'] = number_format($result['AVE_ANNUAL_INCOME_CASH'] * 1.0 / 10000, 2).'万美元';
+            $result['EST_ROI_CASH'] = tt('Unknown', '未提供');
+        }
+
+        if ($result['AVE_ROI_CASH']) {
+            $result['AVE_ROI_CASH'] = number_format($result['AVE_ROI_CASH'], 2).'%';
+        } else {
+            $result['AVE_ROI_CASH'] = tt('Unknown', '未提供');
+        }
+
+        if (WS::$app->language === 'en-US') {
+            if ($result['EST_ANNUAL_INCOME_CASH']) {
+                $result['EST_ANNUAL_INCOME_CASH'] = '$'.number_format($result['EST_ANNUAL_INCOME_CASH'], 0);
+            } else {
+                $result['EST_ANNUAL_INCOME_CASH'] = tt('Unknown', '未提供');
+            }
+
+            if ($result['AVE_ANNUAL_INCOME_CASH']) {
+                $result['AVE_ANNUAL_INCOME_CASH'] = '$'.number_format($result['AVE_ANNUAL_INCOME_CASH'], 0);
+            } else {
+                $result['AVE_ANNUAL_INCOME_CASH'] = tt('Unknown', '未提供');
+            }
+        } else {
+            if ($result['EST_ANNUAL_INCOME_CASH']) {
+                $result['EST_ANNUAL_INCOME_CASH'] = number_format($result['EST_ANNUAL_INCOME_CASH'] * 1.0 / 10000, 2).'万美元';
+            } else {
+                $result['EST_ANNUAL_INCOME_CASH'] = tt('Unknown', '未提供');
+            }
+
+            if ($result['AVE_ANNUAL_INCOME_CASH']) {
+                $result['AVE_ANNUAL_INCOME_CASH'] = number_format($result['AVE_ANNUAL_INCOME_CASH'] * 1.0 / 10000, 2).'万美元';
+            } else {
+                $result['AVE_ANNUAL_INCOME_CASH'] = tt('Unknown', '未提供');
+            }
         }
 
         return [
