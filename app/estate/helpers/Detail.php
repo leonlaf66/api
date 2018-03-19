@@ -10,18 +10,29 @@ class Detail
         $listNo = $rets->list_no;
         $zipCode = $rets->zip_code;
 
-        $result = WS::$app->db->createCommand('select * from house_info_roi where "LIST_NO"=:id', [
-                ':id' => $listNo
-            ])->queryOne();
-        if (! $result) {
-            $result = [
-                'EST_ROI_CASH' => 0,
-                'EST_ANNUAL_INCOME_CASH' => 0
-            ];
+        $result = [
+            'EST_ROI_CASH' => null,
+            'EST_ANNUAL_INCOME_CASH' => null
+        ];
+
+        $estimation = WS::$app->mlsdb->createCommand('select estimation from mls_rets where "list_no"=:id', [
+            ':id' => $listNo
+        ])->queryScalar();
+
+        if ($estimation) {
+            $estimation = json_decode($estimation);
+            if ($estimation->est_roi) {
+                $result['EST_ROI_CASH'] = ($estimation->est_roi * 100);
+            }
+            if ($estimation->est_rental) {
+                $result['EST_ANNUAL_INCOME_CASH'] = $estimation->est_rental * 12;
+            }
         }
+
         $aveResult = WS::$app->db->createCommand('select * from zipcode_roi_ave where "ZIP_CODE"=:zip', [
                 ':zip' => $zipCode
             ])->queryOne();
+        $aveResult['AVE_ROI_CASH'] *= 100;
 
         $result = array_merge($result, $aveResult);
         unset($result['ZIP_CODE']);
