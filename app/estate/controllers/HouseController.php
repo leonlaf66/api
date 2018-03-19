@@ -235,6 +235,12 @@ class HouseController extends \deepziyu\yii\rest\Controller
             $cityId = strtolower(\models\Town::find()->where(['short_name'=>$rets->town])->one()->name);
             $cityId = str_replace(' ', '-', $cityId);
             $polygons = \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []);
+            $estSale = $rets->est_sale;
+            if ($estSale && $rets->porp_type !== 'RN') {
+                $estSale = tt('$'.number_format($estSale, 0), number_format($estSale / 10000.0, 2).'万美元');
+            } else {
+                $estSale = tt('Unknown', '未提供');
+            }
 
             return [
                 'id' => $rets->list_no,
@@ -256,6 +262,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'images' => $rets->getPhotos($options['image']['width'], $options['image']['height']),
                 'taxes' => $render->get('taxes'),
                 'small_images' => $rets->getPhotos($options['small_image']['width'], $options['small_image']['height']),
+                'est_sale' => $estSale,
                 'roi' => DetailHelper::fetchRoi($rets),
                 'details' => DetailHelper::fetchDetail($rets),
                 'recommend_houses' => DetailHelper::fetchRecommends($rets),
