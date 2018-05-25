@@ -18,8 +18,10 @@ class App extends \common\supports\ApiApp
     protected function authAppToken()
     {
         if (\Yii::$app->request->get('app-token') !== $this->appToken && \Yii::$app->request->headers->get('app-token') !== $this->appToken) {
+            $appToken = \Yii::$app->request->get('app-token');
+            if (!$appToken) $appToken = \Yii::$app->request->headers->get('app-token');
             echo json_encode([
-                'app-token' => \Yii::$app->request->headers->get('app-token'),
+                'app-token' => $appToken,
                 'response' => [
                     'code' => 401,
                     'message' => 'APP授权失败'
