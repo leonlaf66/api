@@ -7,6 +7,7 @@ use module\estate\helpers\SearchGeneral;
 use module\estate\helpers\SearchMap;
 use common\estate\helpers\Rets as RetsHelper;
 use module\estate\helpers\Detail as DetailHelper;
+use module\estate\helpers\FieldFilter;
 
 class HouseController extends \deepziyu\yii\rest\Controller
 {   
@@ -31,10 +32,36 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param number $page_size 指定分页大小
      * @return [] - 查询结果, 查看<a href="/help?house-search-results" target="_blank">Results格式</a>
      */
-    public function actionSearch($type = 'purchase', $q = '', $order = 0, $page = 1, $page_size = 15)
+    public function actionSearch($type = 'purchase', $q = '', $filters = [], $order = 0, $page = 1, $page_size = 15)
     {
         // 请求参数
-        $req = WS::$app->request;
+        $variables = [
+            'only_rental' => $type !== 'purchase',
+            'first' => $page_size,
+            'skip' => ( $page - 1 ) * $page_size,
+            'filters' => [],
+            'order' => $order
+        ];
+
+        // 请求graphql服务
+        $result = \yii::$app->graphql->request('search-houses', $variables)->result;
+
+        // 渲染结果
+        $result->items = array_map(function ($d) {
+            return FieldFilter::listItem($d);
+        }, $result->items);
+
+        // 附加options
+        $result->options = [];
+
+        if ($type === 'purchase') {
+            $result->options['prop_types'] = \common\estate\Rets::propertyTypeNames();
+        }
+
+        // 返回
+        return $result;
+
+        /////// 旧的, 即将废弃 /////
 
         if (\WS::$app->area->id !== 'ma') {
             return \module\listhub\estate\controllers\House::search($this, $req);

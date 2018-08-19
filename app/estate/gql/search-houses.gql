@@ -1,0 +1,24 @@
+query search_houses($only_rental:Boolean, $first:Int, $skip:Int, $filters: HouseFiltersInput, $sort:Int) {
+  result: search_houses (only_rental: $only_rental, first: $first, skip: $skip, filters: $filters, sort: $sort) {
+    total
+    items {
+      id
+      nm
+      loc
+      photo(w:800, h:800)
+      photo_sub2: photo(idx:2, w:600, h:600)
+      photo_sub3: photo(idx:3, w:600, h:600)
+      beds
+      baths
+      square_feet
+      price
+      prop
+      latlng
+      status
+      date
+      parking
+      garage
+      is_in_sd
+    }
+  }
+}

@@ -1,2 +1,5 @@
+/exceptions.log
+/composer.lock
+/config/local.php
 /vendor
 /runtime

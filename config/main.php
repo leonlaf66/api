@@ -28,6 +28,10 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
                 "GET,POST,PUT,DELETE <controller:[\w-]+>/<action:[\w-]+>" => "<controller>/<action>",
             ],
         ],
+        'graphql' => [
+            'class'=>'module\core\components\graphql\Client',
+            'appToken' => 'b2e476cb5ddcbf81c337218d5b5d43fa83bd6a8d4c9b7ba4ea047c70d22a828c'
+        ],
         'user' => [
             'identityClass' => '\common\customer\UserIdentity',
             'enableAutoLogin' => false,
@@ -63,4 +67,4 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
         '@bower'=>APP_ROOT.'/vendor/bower',
         'module'=>APP_ROOT.'/app'
     ]
-]);
+], include(__DIR__.'/local.php'));
