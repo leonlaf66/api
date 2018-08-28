@@ -1,5 +1,5 @@
-query search_houses($only_rental:Boolean, $first:Int, $skip:Int, $filters: HouseFiltersInput, $sort:Int) {
-  result: search_houses (only_rental: $only_rental, first: $first, skip: $skip, filters: $filters, sort: $sort) {
+query search_houses($only_rental:Boolean, $q:String="", $filters: HouseFiltersInput, $sort:Int, $first:Int, $skip:Int) {
+  result: search_houses (only_rental: $only_rental, q: $q, filters: $filters, sort: $sort, first: $first, skip: $skip) {
     total
     items {
       id

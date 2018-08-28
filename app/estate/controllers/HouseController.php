@@ -51,6 +51,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         // 请求graphql服务
         $result = app('graphql')->request('search-houses', [
             'only_rental' => $type !== 'purchase',
+            'q' => $q,
             'first' => $page_size,
             'skip' => ( $page - 1 ) * $page_size,
             'filters' => $targetFilters,
