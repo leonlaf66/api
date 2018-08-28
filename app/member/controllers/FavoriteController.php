@@ -27,6 +27,7 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
         ])->result;
 
         $result->items = array_map(function ($item) {
+            $item->id = intval($item->id);
             $item->house = FieldFilter::listItem($item->house);
             return $item;
         }, $result->items);

@@ -155,8 +155,8 @@ class FieldFilter
             'square_feet' => static::square($d->square_feet),
             'list_price' => static::money($d->price),
             'prop_type_name' => static::housePropName($d->prop),
-            'latitude' => $d->latlng[0],
-            'longitude' => $d->latlng[1],
+            'latitude' => $d->latlng[0].'',
+            'longitude' => $d->latlng[1].'',
             'status_name' => static::statusName($d->status, $d->prop),
             'list_days_description' => static::listDayDesc($ldays),
             'tags' => static::tags($d)
