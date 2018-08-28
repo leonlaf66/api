@@ -17,6 +17,8 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
      */
     public function actionList($page = 1, $page_size = 15)
     {
+        if ($page == '0') $page = 1;
+        
         $result = app('graphql')->request('schedule', [
             'first' => $page_size,
             'skip' => ($page - 1) * $page_size

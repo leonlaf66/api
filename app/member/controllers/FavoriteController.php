@@ -18,6 +18,8 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
      */
     public function actionList($type = 'purchase', $page = 1, $page_size = 15)
     {
+        if ($page == '0') $page = 1;
+
         $result = app('graphql')->request('favorite', [
             'only_rental' => $type !== 'purchase',
             'first' => $page_size,
@@ -31,8 +33,6 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
             $item->house = FieldFilter::listItem($item->house);
             return $item;
         }, $result->items);
-
-        \yii::info(json_encode($result), 'dev');
 
         return $result;
     }
