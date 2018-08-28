@@ -12,12 +12,12 @@ class FieldFilter
                 $val = number_format($val / 10000.0, 2);
                 if (!$full) return $val;
 
-                return $val.'万美元';
+                return $val.' 万美元';
             } else {
                 $val = number_format($val, 0);
                 if (!$full) return $val;
 
-                return $val.'美元';
+                return $val.' 美元';
             }
         }
         $val = number_format($val, 0);
@@ -31,9 +31,9 @@ class FieldFilter
         $rmbVal = $val * 6.9506;
 
         if ($rmbVal > 10000) {
-            return number_format($rmbVal / 10000.0, 2).'万元';
+            return number_format($rmbVal / 10000.0, 2).' 万元';
         }
-        return number_format($rmbVal, 0).'元';
+        return number_format($rmbVal, 0).' 元';
     }
 
     public static function percent($val)
@@ -47,9 +47,9 @@ class FieldFilter
         if ($unknownVal = self::unknown($val, false)) return $unknownVal;
 
         if (\WS::$app->language === 'zh-CN') {
-            return intval($val * 0.092903).'平方米';
+            return intval($val * 0.092903).' 平方米';
         }
-        return intval($val).'Sq.Ft';
+        return intval($val).' Sq.Ft';
     }
 
     public static function baths($vals)
