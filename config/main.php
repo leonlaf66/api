@@ -48,7 +48,7 @@ return \yii\helpers\ArrayHelper::merge(get_fdn_etc(), [
         'response' => [
             //返回异常统一处理
             'on beforeSend' => function ($event) {
-                //$event->sender->format = 'json';
+                $event->sender->format = 'json';
             },
         ],
         'errorHandler' => [

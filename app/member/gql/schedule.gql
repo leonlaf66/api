@@ -1,0 +1,30 @@
+query find ($first:Int = 15, $skip:Int = 0){
+  result: find_house_tour(first: $first, skip: $skip) {
+    total
+    items {
+      id
+      house {
+        id
+        nm
+        loc
+        photo(w:800, h:800)
+        photo_sub2: photo(idx:2, w:600, h:600)
+        photo_sub3: photo(idx:3, w:600, h:600)
+        beds
+        baths
+        square_feet
+        price
+        prop
+        latlng
+        status
+        date
+        parking
+        garage
+        is_in_sd
+      }
+      date_start
+      date_end
+      is_confirmed
+    }
+  }
+}

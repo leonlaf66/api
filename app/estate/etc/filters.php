@@ -1,92 +1,77 @@
 <?php
 return [
-    'latlon' => function ($vals, $query) {
+    'latlon' => function ($vals) {
         list($lat, $lon) = explode(',', $vals);
-        $query->andWhere('earth_box(ll_to_earth(latitude::numeric, longitude::numeric),2000) @> ll_to_earth(:lat, :lon)', [':lat' => $lat, ':lon' => $lon]);
+
+        return ['latlng', ['lat' => $lat, 'lng' => $lon]];
     },
-    'city_id' => function ($code, $query) {
-        $code = strtoupper($code);
-        $query->andWhere(['=', 'town', $code]);
+    'city_id' => function ($cityId) {
+        if (\yii::$app->area->id === 'ma' && !is_numeric($cityId)) {
+            $cityId = (new \yii\db\Query())
+                ->from('town')
+                ->select('id')
+                ->where(['short_name' => $cityId])
+                ->scalar();
+        }
+        return ['city_id', $cityId];
     },
-    'list_price' => function ($range, $query) {
-        list($start, $end) = array_values(array_merge([
+    'list_price' => function ($range) {
+        $priceRange = array_merge([
             'from' => 0,
             'to' => 9999999999
-        ], $range));
+        ], $range);
 
-        $query->andWhere(['>', 'list_price', $start]);
-        $query->andWhere(['<', 'list_price', $end]);
+        return ['price', $priceRange];
     },
-    'prop-type' => function ($types, $query) {
-        $query->andWhere(['in', 'prop_type', $types]);
+    'prop-type' => function ($types) {
+        return ['props', $types];
     },
-    'square' => function ($range, $query) {
-        list($start, $end) = array_values(array_merge([
+    'square' => function ($range) {
+        $squareRange = array_merge([
             'from' => 0,
             'to' => 9999999999
-        ], $range));
+        ], $range);
 
-        $query->andWhere(['>', 'square_feet', $start]);
-        $query->andWhere(['<', 'square_feet', $end]);
+        return ['square', $squareRange];
     },
-    'beds' => function ($val, $query) {
+    'beds' => function ($val) {
+        return ['beds', intval($val)];
+    },
+    'baths' => function ($val) {
+        return ['baths', $val];
+    },
+    'parking' => function ($val) {
         $val = intval($val);
-        $query->andWhere(['>=', 'no_bedrooms', $val]);
+        return ['parking', $val];
     },
-    'baths' => function ($val, $query) {
-        $val = intval($val);
-        $query->andWhere(['>=', 'no_bathrooms', $val]);
+    'agrage' => function ($val) {
+        return ['garage', intval($val) === 1];
     },
-    'parking' => function ($val, $query) {
-        $val = intval($val);
-        $query->andWhere(['>=', 'parking_spaces', $val]);
+    'market-days' => function ($val) {
+        return ['ldays', intval($val)];
     },
-    'agrage' => function ($val, $query) {
-        $val = intval($val);
-        if ($val === 1) {
-            $query->andWhere(['>', 'garage_spaces', 0]);
-        } else {
-            $query->andWhere(['=', 'garage_spaces', 0]);
-        }
-    },
-    'market-days' => function ($val, $query) {
-        if($value !== '') {
-            $getRangeFns = [
-                '1'=>function(){
-                    $now = time();
-                    return [$now - 86400 * 2, $now];
-                },
-                '2'=>function(){
-                    $now = time();
-                    return [$now - 86400 * 7, $now];
-                },
-                '3'=>function(){
-                    $now = time();
-                    return [$now - 86400 * 30, $now];
-                }
-            ];
+    'school_district' => function ($townCode) {
+        $townCodes = explode('/', $townCode);
+        $cityIds = (new \yii\db\Query())
+            ->from('town')
+            ->select('id')
+            ->where(['in', 'short_name', $townCodes])
+            ->column();
 
-            if(isset($getRangeFns[$value])) {
-                $getRangeFn = $getRangeFns[$value];
-                list($start, $end) = $getRangeFn();
-                $start = date('Y-m-d', $start);
-                $end = date('Y-m-d', $end);
-                $query->andWhere('list_date>=:start and list_date <=:end', [
-                    ':start'=>$start,
-                    ':end'=>$end
-                ]);
-            }
+        return ['city_ids', $cityIds];
+    },
+    'subway_line' => function ($lineId) {
+        if (!is_numeric($lineId)) {
+            $lineId = (new \yii\db\Query())
+                ->from('subway_line')
+                ->select('id')
+                ->where(['code' => $lineId])
+                ->scalar();
         }
+        return ['subway_line', $lineId];
     },
-    'school_district' => function ($townCode, $query) {
-        $townCodes = explode('/', strtoupper($townCode));
-        $query->andWhere(['in', 'town', $townCodes]);
-        return $townCodes;
-    },
-    'subway_line' => function ($lineId, $query) {
-        $query->andWhere(['@>', 'subway_lines', '{'.strtoupper($lineId).'}']);
-    },
-    'subway_stations' => function ($stationIds, $query) {
-        $query->andWhere(['&&', 'subway_stations', '{'.implode(',', $stationIds).'}']);
+    'subway_stations' => function ($stationIds) {
+        if (is_string($stationIds)) $stationIds = explode(',', $stationIds);
+        return ['subway_stations', $stationIds];
     }
 ];

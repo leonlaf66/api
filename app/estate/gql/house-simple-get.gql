@@ -1,0 +1,15 @@
+query house_get($list_no: ID!) {
+  result: house(id: $list_no) {
+    id
+    nm
+    loc
+    price
+    prop
+    beds
+    baths
+    square_feet
+    status
+    date
+    photo(w: 400, h: 300)
+  }
+}

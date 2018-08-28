@@ -1,0 +1,3 @@
+query {
+  result: autocomplete_cities
+}

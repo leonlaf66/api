@@ -22,6 +22,8 @@ class App extends \common\supports\ApiApp
             if (!$appToken) $appToken = \Yii::$app->request->headers->get('app-token');
             echo json_encode([
                 'app-token' => $appToken,
+                'code' => 401,
+                'message' => 'APP授权失败',
                 'response' => [
                     'code' => 401,
                     'message' => 'APP授权失败'
@@ -47,6 +49,8 @@ class App extends \common\supports\ApiApp
         if (in_array($this->controller->module->id, ['catalog', 'estate'])) {
             if (is_null(WS::$app->area->id)) {
                 echo json_encode([
+                    'code' => 403,
+                    'message' => '必须指定area_id',
                     'response' => [
                         'code' => 403,
                         'message' => '必须指定area_id'

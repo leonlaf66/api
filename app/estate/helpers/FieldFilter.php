@@ -3,18 +3,27 @@ namespace module\estate\helpers;
 
 class FieldFilter
 {
-    public static function money($val)
+    public static function money($val, $full = true)
     {
         if ($unknownVal = self::unknown($val, false)) return $unknownVal;
 
         if (\WS::$app->language === 'zh-CN') {
             if ($val > 10000) {
-                return number_format($val / 10000.0, 2).'万美元';
+                $val = number_format($val / 10000.0, 2);
+                if (!$full) return $val;
+
+                return $val.'万美元';
             } else {
-                return number_format($val, 0).'美元';
+                $val = number_format($val, 0);
+                if (!$full) return $val;
+
+                return $val.'美元';
             }
         }
-        return '$'.number_format($val, 0);
+        $val = number_format($val, 0);
+        if (!$full) return $val;
+
+        return '$'.$val;
     }
 
     public static function moneyRmb($val)
@@ -97,7 +106,7 @@ class FieldFilter
                 return intval($d->parking) > 1;
             },
             tt('Has garage', '带车库') => function ($d) {
-                return intval($d->garage) > 1;
+                return intval($d->garage) > 0;
             },
             tt('Luxury house', '高级豪宅') => function ($d) {
                 return in_array($d->prop, ['CC', 'SF']) && intval($d->price) > 1000000;
@@ -140,9 +149,9 @@ class FieldFilter
                 $d->photo_sub2,
                 $d->photo_sub3
             ],
-            'no_bedrooms' => $d->beds,
-            'no_full_baths' => $d->baths[0],
-            'no_half_baths' => $d->baths[1],
+            'no_bedrooms' => static::unknown($d->beds),
+            'no_full_baths' => static::unknown($d->baths[0]),
+            'no_half_baths' => static::unknown($d->baths[1]),
             'square_feet' => static::square($d->square_feet),
             'list_price' => static::money($d->price),
             'prop_type_name' => static::housePropName($d->prop),
@@ -156,6 +165,6 @@ class FieldFilter
 
     public static function unknown($val, $returnRaw = true)
     {
-        return empty($val) ? tt('Unknown', '未提供') : ($returnRaw ? $val : false);
+        return $val != '0' && empty($val) ? tt('Unknown', '未提供') : ($returnRaw ? $val : false);
     }
 }

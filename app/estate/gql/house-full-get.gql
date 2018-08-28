@@ -1,0 +1,41 @@
+query house_get(
+    $list_no: ID!,
+    $image_w:Int=800,
+    $image_h:Int=800,
+    $small_image_w:Int=400,
+    $small_image_h:Int=300) {
+  result: house(id: $list_no) {
+    ...house_fields
+    images: photos(w:$image_w, h:$image_h)
+    small_images: photos(w:$small_image_w, h:$small_image_h)
+    est_sale
+    taxes
+    area
+    roi
+    details
+    associated_houses(first:10) {
+      ...house_fields
+      photo(w:800, h:800)
+      photo_sub2: photo(idx:2, w:600, h:600)
+      photo_sub3: photo(idx:3, w:600, h:600)
+      status
+      parking
+      garage
+      is_in_sd
+    }
+    polygons
+  }
+}
+fragment house_fields on House {
+    id
+    nm
+    loc
+    price
+    prop
+    beds
+    baths
+    square_feet
+    status
+    date
+    latlng
+}

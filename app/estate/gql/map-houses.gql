@@ -1,0 +1,3 @@
+query map_houses($only_rental:Boolean, $q:String="", $filters: HouseFiltersInput, $first:Int = 1000) {
+  result: map_search_houses(only_rental: $only_rental, q: $q, filters: $filters, first: $first, includePolygons: true)
+}

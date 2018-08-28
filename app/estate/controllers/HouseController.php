@@ -5,6 +5,7 @@ use WS;
 use common\estate\HouseIndex;
 use module\estate\helpers\SearchGeneral;
 use module\estate\helpers\SearchMap;
+use \yii\helpers\ArrayHelper;
 use common\estate\helpers\Rets as RetsHelper;
 use module\estate\helpers\Detail as DetailHelper;
 use module\estate\helpers\FieldFilter;
@@ -32,19 +33,29 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @param number $page_size 指定分页大小
      * @return [] - 查询结果, 查看<a href="/help?house-search-results" target="_blank">Results格式</a>
      */
-    public function actionSearch($type = 'purchase', $q = '', $filters = [], $order = 0, $page = 1, $page_size = 15)
+    public function actionSearch($type = 'purchase', $q = '', $order = '0', $page = 1, $page_size = 15)
     {
-        // 请求参数
-        $variables = [
+        // filters
+        $targetFilters = [];
+        $filtersMap = include(__DIR__.'/../etc/filters.php');
+        foreach (app('request')->get('filters', []) as $sfield => $val) {
+            if (isset($filtersMap[$sfield])) {
+                list($targetField, $targetVal) = ($filtersMap[$sfield])($val);
+                $targetFilters[$targetField] = $targetVal;
+            }
+        }
+
+        // order
+        $sort = $order + 1; // +1刚刚对上
+
+        // 请求graphql服务
+        $result = app('graphql')->request('search-houses', [
             'only_rental' => $type !== 'purchase',
             'first' => $page_size,
             'skip' => ( $page - 1 ) * $page_size,
-            'filters' => [],
-            'order' => $order
-        ];
-
-        // 请求graphql服务
-        $result = \yii::$app->graphql->request('search-houses', $variables)->result;
+            'filters' => $targetFilters,
+            'sort' => $sort
+        ])->result;
 
         // 渲染结果
         $result->items = array_map(function ($d) {
@@ -60,66 +71,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
         // 返回
         return $result;
-
-        /////// 旧的, 即将废弃 /////
-
-        if (\WS::$app->area->id !== 'ma') {
-            return \module\listhub\estate\controllers\House::search($this, $req);
-        }
-
-        // search对象
-        $search = HouseIndex::search();
-
-        // 搜索参数应用
-        SearchGeneral::apply($req, $search->query);
-
-        // 分页处理
-        $search->pagination->setPage(intval($page) - 1);
-        $search->pagination->setPageSize($page_size);
-
-        $items = [];
-        if (intval($page) - 1 < 100) { // 限制最多100页
-            // 获取真实结果
-            $results = RetsHelper::result($search);
-
-            foreach ($results as $rets) {
-                $r = $rets->render();
-                $items[] = [
-                    'id' => $rets->list_no,
-                    'name' => $rets->title(),
-                    'location' => $rets->location,
-                    'image' => $rets->getPhoto(0, 800, 800),
-                    'images' => [
-                        $rets->getPhoto(1, 600, 600),
-                        $rets->getPhoto(2, 600, 600)
-                    ],
-                    'no_bedrooms' => intval($rets->no_bedrooms),
-                    'no_full_baths' => intval($rets->no_full_baths),
-                    'no_half_baths' => intval($rets->no_half_baths),
-                    'square_feet' => $r->get('square_feet')['formatedValue'],
-                    'list_price' => $r->get('list_price')['formatedValue'],
-                    'prop_type_name' => $rets->propTypeName(),
-                    'latitude' => $rets->latitude,
-                    'longitude' => $rets->longitude,
-                    'status_name' => $rets->statusName(),
-                    'list_days_description' => $rets->getListDaysDescription(),
-                    'tags' => $rets->getTags()
-                ];
-            }
-        }
-
-        // 返回
-        $resuts = [
-            'total' => $search->query->count(),
-            'items' => $items,
-            'options' => []
-        ];
-
-        if ($type === 'purchase') {
-            $resuts['options']['prop_types'] = \common\estate\Rets::propertyTypeNames();
-        }
-
-        return $resuts;
     }
 
     /**
@@ -130,37 +81,14 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function actionTop($limit = 10)
     {
-        $req = \WS::$app->request;
-        if (\WS::$app->area->id !== 'ma') {
-            return \module\listhub\estate\controllers\House::top($this, $req);
-        }
+        // 请求graphql服务
+        $result = app('graphql')->request('top-houses')->result;
 
-        $items = \models\SiteSetting::get('home.luxury.houses', 'ma');
-        foreach ($items as $item) {
-            if ($rets = \common\estate\Rets::findOne($item['id'])) {
-                $render = $rets->render();
-                $houses[] = [
-                    'id' => $rets->list_no,
-                    'name' => $rets->title(),
-                    'location' => $rets->getLocation(),
-                    'prop_type_name' => $rets->propTypeName(),
-                    'list_price' => $render->get('list_price')['formatedValue'],
-                    'image' => $rets->getPhoto(0, 800, 800),
-                    'images' => [
-                        $rets->getPhoto(1, 600, 600),
-                        $rets->getPhoto(2, 600, 600)
-                    ],
-                    'no_bedrooms' => intval($rets->no_bedrooms),
-                    'no_full_baths' => intval($rets->no_full_baths),
-                    'no_half_baths' => intval($rets->no_half_baths),
-                    'square_feet' => $render->get('square_feet')['formatedValue'],
-                    'status_name' => $rets->statusName(),
-                    'list_days_description' => $rets->getListDaysDescription(),
-                ];
-            }
-        }
+        $items = array_map(function ($group) {
+            return FieldFilter::listItem($group->house);
+        }, (Array)$result);
 
-        return array_slice($houses, 0, $limit);
+        return array_slice($items, 0, $limit);
     }
 
     /**
@@ -173,55 +101,19 @@ class HouseController extends \deepziyu\yii\rest\Controller
      * @return [] items 查询结果
      * @return [] polygons 区域边界
      */
-    public function actionMapSearch($type = 'purchase', $q = '', $limit=4000)
+    public function actionMapSearch($type = 'purchase', $q = '', $limit=1000)
     {
-        // 请求参数
-        $req = WS::$app->request;
+        // filters
+        $targetFilters = [];
 
-        if (\WS::$app->area->id !== 'ma') {
-            return \module\listhub\estate\controllers\House::mapSearch($this, $req);
-        }
+        $result = app('graphql')->request('map-houses', [
+            'only_rental' => $type !== 'purchase',
+            'q' => $q,
+            'first' => $limit,
+            'filters' => $targetFilters
+        ])->result;
 
-        $query = (new \yii\db\Query())
-            ->from('house_index')
-            ->select('id, list_price, prop_type, latitude, longitude')
-            ->where([
-                'is_show' => true
-            ])
-            ->limit($limit);
-
-        // 搜索参数应用
-        $townCodes = SearchMap::apply($req, $query);
-
-        // 获取真实结果
-        $houses = $query->all();
-
-        // 构造结果
-        $items = [];
-        foreach ($houses as $d) {
-            $items[] = implode('|', [
-                $d['id'],
-                $d['list_price'] * 1.0 / 10000,
-                $d['prop_type'],
-                $d['latitude'],
-                $d['longitude']
-            ]);
-        }
-
-        // 构造城市areas
-        $polygons = [];
-        if (! empty($townCodes)) {
-            foreach ($townCodes as $code) {
-                $cityId = strtolower(\models\Town::find()->where(['short_name'=>$code])->one()->name);
-                $polygons = array_merge($polygons, \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []));
-            }
-        }
-
-        // 返回
-        return [
-            'items' => $items,
-            'polygons' => $polygons
-        ];
+        return $result;
     }
 
     /**
@@ -233,20 +125,16 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function actionGet($id, $simple = '0')
     {
+        // 请求参数
         $req = \WS::$app->request;
-        if (\WS::$app->area->id !== 'ma') {
-            return \module\listhub\estate\controllers\House::get($this, $req);
+
+        // 返回简单(用于地图弹框)
+        if ($simple === '1') {
+            return $this->actionGetSimple($id);
         }
 
-        $rets = \common\estate\Rets::findOne($id);
-        
-        if(is_null($rets )) {
-            throw new \yii\web\HttpException(404, "Page not found");
-        }
-
-        $render = $rets->render();
-
-        $options = \yii\helpers\ArrayHelper::merge([
+        // 请求选项
+        $options = ArrayHelper::merge([
             'image' => [
                 'width' => '800',
                 'height' => '800'
@@ -255,62 +143,106 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 'width' => '400',
                 'height' => '300'
             ]
-        ], WS::$app->request->get('options', []));
+        ], app('request')->get('options', []));
 
-        if ($simple === '0') {
-            // 构造城市areas
-            $cityId = strtolower(\models\Town::find()->where(['short_name'=>$rets->town])->one()->name);
-            $cityId = str_replace(' ', '-', $cityId);
-            $polygons = \common\estate\helpers\Config::get('map.city.polygon/'.$cityId, []);
-            $estSale = $rets->est_sale;
-            if ($estSale && $rets->porp_type !== 'RN') {
-                $estSale = tt('$'.number_format($estSale, 0), number_format($estSale / 10000.0, 2).'万美元');
-            } else {
-                $estSale = tt('Unknown', '未提供');
-            }
+        // 请求graphql服务
+        $house = app('graphql')->request('house-full-get', [
+            'list_no' => $id,
+            'image_w' => $options['image']['width'],
+            'image_h' => $options['image']['height'],
+            'small_image_w' => $options['small_image']['width'],
+            'small_image_h' => $options['small_image']['height']
+        ])->result;
 
-            return [
-                'id' => $rets->list_no,
-                'name' => $rets->title(),
-                'location' => $rets->getLocation(),
-                'list_price' => $render->get('list_price')['formatedValue'],
-                'prop_type_name' => $render->get('prop_type_name')['value'],
-                strtolower($rets->prop_type).'_type_name' => $render->get(strtolower($rets->prop_type).'_type_name')['value'],
-                'no_bedrooms' => is_null($rets->no_bedrooms) ? tt('Unknown', '未提供') : $rets->no_bedrooms,
-                'no_full_baths' => is_null($rets->no_full_baths) ? tt('Unknown', '未提供') : $rets->no_full_baths,
-                'no_half_baths' => $rets->no_half_baths ?? '0',
-                'square_feet' => $render->get('square_feet')['formatedValue'],
-                'est_sale' => $rets->getEstPrice(),
-                'area' => $render->get('area')['value'],
-                'status_name' => $rets->statusName(),
-                'list_days_description' => $rets->getListDaysDescription(),
-                'latitude' => $rets->latitude,
-                'longitude' => $rets->longitude,
-                'images' => $rets->getPhotos($options['image']['width'], $options['image']['height']),
-                'taxes' => $render->get('taxes'),
-                'small_images' => $rets->getPhotos($options['small_image']['width'], $options['small_image']['height']),
-                'est_sale' => $estSale,
-                'roi' => DetailHelper::fetchRoi($rets),
-                'details' => DetailHelper::fetchDetail($rets),
-                'recommend_houses' => DetailHelper::fetchRecommends($rets),
-                'polygons' => $polygons
-            ];
-        } else {
-            return [
-                'id' => $rets->list_no,
-                'name' => $rets->title(),
-                'location' => $rets->getLocation(),
-                'list_price' => $render->get('list_price')['formatedValue'],
-                'prop_type_name' => $render->get('prop_type_name')['value'],
-                'no_bedrooms' => is_null($rets->no_bedrooms) ? tt('Unknown', '未提供') : $rets->no_bedrooms,
-                'no_full_baths' => is_null($rets->no_full_baths) ? tt('Unknown', '未提供') : $rets->no_full_baths,
-                'no_half_baths' => $rets->no_half_baths ?? '0',
-                'square_feet' => $render->get('square_feet')['formatedValue'],
-                'status_name' => $rets->statusName(),
-                'list_days_description' => $rets->getListDaysDescription(),
-                'image' => $rets->getPhoto()
-            ];
-        }
+        // 关联房源
+        $associatedHouses = array_map(function ($d) {
+            return FieldFilter::listItem($d);
+        }, $house->associated_houses);
+
+        // taxes
+        $taxes = [
+            'id' => 'taxes',
+            'title'=>'',
+            'rawValue' => $house->taxes,
+            'value' => FieldFilter::money($house->taxes, false),
+            'formatedValue' => FieldFilter::money($house->taxes)
+        ];
+
+        $taxes[app()->language === 'en-US' ? 'prefix' : 'suffix']
+            = str_replace($taxes['value'], '', $taxes['formatedValue']);
+
+        // detail
+        $details = array_map(function ($group) {
+            $group->items = array_map(function ($item) {
+                $item->rawValue = $item->value;
+                $item->formatedValue = $item->value;
+                if (isset($item->prefix)) {
+                    $item->formatedValue = $item->prefix . $item->formatedValue;
+                }
+                if (isset($item->suffix)) {
+                    $item->formatedValue = $item->formatedValue . $item->suffix;
+                }
+                return $item;
+            }, (Array)$group->items);
+            return $group;
+        }, $house->details);
+
+        return [
+            'id' => $house->id,
+            'name' => $house->nm,
+            'location' => $house->loc,
+            'list_price' => FieldFilter::money($house->price),
+            'prop_type_name' => FieldFilter::housePropName($house->prop),
+            strtolower($house->prop.'_type_name') => FieldFilter::unknown(''), // 暂不提供
+            'no_bedrooms' => FieldFilter::unknown($house->beds),
+            'no_full_baths' => FieldFilter::unknown($house->baths[0]),
+            'no_half_baths' => FieldFilter::unknown($house->baths[1]),
+            'square_feet' => FieldFilter::square($house->square_feet),
+            'est_sale' => FieldFilter::money($house->est_sale),
+            'area' => FieldFilter::unknown($house->area),
+            'status_name' => FieldFilter::statusName($house->status, $house->prop),
+            'list_days_description' => FieldFilter::listDayDesc(round((time() - strtotime($house->date)) / 3600 / 24)),
+            'latitude' => $house->latlng[0],
+            'longitude' => $house->latlng[1],
+            'images' => $house->images,
+            'taxes' => $taxes,
+            'small_images' => $house->small_images,
+            'roi' => array_map(function ($val) {
+                return FieldFilter::unknown($val);
+            }, (Array)$house->roi),
+            'details' => $details,
+            'recommend_houses' => $associatedHouses,
+            'polygons' => $house->polygons
+        ];
+    }
+
+    /**
+     * 房源详情(简单, 用于地图弹框)
+     * @desc 房源详情
+     * @param number $id 房源ID
+     * @return object - 房源信息, 查看<a href="/help?house-get-results" target="_blank">Results格式</a>
+     */
+    public function actionGetSimple($id)
+    {
+        // 请求graphql服务
+        $house = app('graphql')->request('house-simple-get', [
+            'list_no' => $id
+        ])->result;
+
+        return [
+            'id' => $house->id,
+            'name' => $house->nm,
+            'location' => $house->loc,
+            'list_price' => FieldFilter::money($house->price),
+            'prop_type_name' => FieldFilter::housePropName($house->prop),
+            'no_bedrooms' => FieldFilter::unknown($house->beds),
+            'no_full_baths' => FieldFilter::unknown($house->baths[0]),
+            'no_half_baths' => FieldFilter::unknown($house->baths[1]),
+            'square_feet' => FieldFilter::square($house->square_feet),
+            'status_name' => FieldFilter::statusName($house->status, $house->prop),
+            'list_days_description' => FieldFilter::listDayDesc(round((time() - strtotime($house->date)) / 3600 / 24)),
+            'image' => $house->photo
+        ];
     }
 
     /**
@@ -364,43 +296,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function actionSearchOptions()
     {
-        $req = \WS::$app->request;
-
-        if (\WS::$app->area->id !== 'ma') {
-            return \module\listhub\estate\controllers\House::searchOptions($this, $req);
-        }
-
-        $resultItems = [];
-        $towns = \models\Town::find()->where([
-            'state'=>'MA'
-        ])->all();
-
-        foreach ($towns as $town) {
-            $resultItems[] = [
-                'title' => $town->name,
-                'desc' => $town->name_cn.',MA'
-            ];
-            
-            if ($town->name_cn) {
-                $resultItems[] = [
-                    'title' => $town->name_cn,
-                    'desc' => $town->name.',MA'
-                ];
-            }
-        }
-
-        $zipcodes = \models\ZipcodeTown::find()->where([
-            'state'=>'MA'
-        ])->all();
-
-        foreach ($zipcodes as $zipcode) {
-            $resultItems[] = [
-                'title' => $zipcode->zip,
-                'desc' => $zipcode->city_name.','.$zipcode->city_name_cn.',MA'
-            ];
-        }
-
-        return $resultItems;
+        return app('graphql')->request('autocomplete_cities')->result;
     }
 
     /**
@@ -433,14 +329,5 @@ class HouseController extends \deepziyu\yii\rest\Controller
         }
 
         return $resultItems;
-    }
-
-    public function actionData($id)
-    {
-        if (\WS::$app->area->id !== 'ma') {
-            return \models\listhub\HouseIndex::findOne($id);
-        }
-
-        return \common\estate\Rets::findOne($id);
     }
 }

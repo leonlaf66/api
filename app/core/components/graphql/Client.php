@@ -1,6 +1,8 @@
 <?php
 namespace module\core\components\graphql;
 
+use deepziyu\yii\rest\ApiException;
+
 class Client extends \yii\base\Component
 {
     public $baseUrl = '';
@@ -22,9 +24,15 @@ class Client extends \yii\base\Component
         ]);
 
         $query = $this->getGraphqlQuery($gqlId);
-        $response = $this->_client->response($query, $variables, $headers);
+        $response = null;
+        try {
+            $response = $this->_client->response($query, $variables, $headers);
+        } catch(\Exception $e) {
+            throw new ApiException(400, $e->getMessage(), $e);
+        }
         if ($response->hasErrors()) {
-            return $defValue;
+            $error = $response->errors()[0];
+            throw new ApiException($error->extensions->code, 'SERVICE-ERROR:'.$error->message);
         }
 
         return $response->all();

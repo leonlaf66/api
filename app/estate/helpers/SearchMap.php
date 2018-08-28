@@ -35,12 +35,12 @@ class SearchMap
         if ($q && strlen($q) > 0) {
             $town = \models\Town::searchKeywords(ucwords($q), 'MA');
             if ($town) { // 城市
-                $query->andWhere(['town' => $town->short_name]);
+                $query->andWhere(['city_code' => $town->short_name]);
                 $townCode = $town->short_name;
             } else {
                 $zipcode = \models\ZipcodeTown::searchKeywords($q);
                 if ($zipcode) { // zip
-                    $query->andWhere(['town' => $zipcode->city_short_name]);
+                    $query->andWhere(['city_code' => $zipcode->city_short_name]);
                     $townCode = $zipcode->city_short_name;
                 } else { // 普通搜索
                     $qWhere = "1=2";

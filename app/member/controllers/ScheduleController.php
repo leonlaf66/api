@@ -1,6 +1,8 @@
 <?php
 namespace module\member\controllers;
 
+use module\estate\helpers\FieldFilter;
+
 class ScheduleController extends \deepziyu\yii\rest\Controller
 {
     public $enableAuth = true;
@@ -15,6 +17,25 @@ class ScheduleController extends \deepziyu\yii\rest\Controller
      */
     public function actionList($page = 1, $page_size = 15)
     {
+        $result = app('graphql')->request('schedule', [
+            'first' => $page_size,
+            'skip' => ($page - 1) * $page_size
+        ], [
+            'access-token' => app()->request->get('access-token')
+        ])->result;
+
+        $result->items = array_map(function ($item) {
+            $item->house = FieldFilter::listItem($item->house);
+            $item->status = $item->is_confirmed ? '1' : '0';
+            unset($item->is_confirmed);
+            $item->date_start = date('Y-m-d H:i:s', strtotime($item->date_start));
+            $item->date_end = date('Y-m-d H:i:s', strtotime($item->date_end));
+            return $item;
+        }, $result->items);
+
+        return $result;
+
+
         $query = \common\estate\gotour\Tour::findByUser(\WS::$app->user->id)
             ->offset(($page - 1) * $page_size)
             ->limit($page_size);
