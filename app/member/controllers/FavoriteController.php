@@ -32,6 +32,8 @@ class FavoriteController extends \deepziyu\yii\rest\Controller
             return $item;
         }, $result->items);
 
+        \yii::info(json_encode($result), 'dev');
+
         return $result;
     }
 
