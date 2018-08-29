@@ -50,17 +50,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
         // order
         $sort = $order + 1; // +1刚刚对上
 
-        // log
-        $req = json_encode([
-            'only_rental' => $type !== 'purchase',
-            'q' => $q,
-            'first' => $page_size,
-            'skip' => ( $page - 1 ) * $page_size,
-            'filters' => $targetFilters,
-            'sort' => $sort
-        ]);
-        \yii::info($req, 'dev');
-
         // 请求graphql服务
         $result = app('graphql')->request('search-houses', [
             'only_rental' => $type !== 'purchase',
