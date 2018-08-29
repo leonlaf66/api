@@ -107,7 +107,15 @@ class HouseController extends \deepziyu\yii\rest\Controller
     public function actionMapSearch($type = 'purchase', $q = '', $limit=1000)
     {
         // filters
+        $q = urldecode($q);
         $targetFilters = [];
+        $filtersMap = include(__DIR__.'/../etc/filters.php');
+        foreach (app('request')->get('filters', []) as $sfield => $val) {
+            if (isset($filtersMap[$sfield])) {
+                list($targetField, $targetVal) = ($filtersMap[$sfield])($val);
+                $targetFilters[$targetField] = $targetVal;
+            }
+        }
 
         $result = app('graphql')->request('map-houses', [
             'only_rental' => $type !== 'purchase',
