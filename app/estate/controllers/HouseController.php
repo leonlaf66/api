@@ -45,6 +45,18 @@ class HouseController extends \deepziyu\yii\rest\Controller
             }
         }
 
+        // log
+        $req = json_encode([
+            'only_rental' => $type !== 'purchase',
+            'q' => $q,
+            'first' => $page_size,
+            'skip' => ( $page - 1 ) * $page_size,
+            'filters' => $targetFilters,
+            'sort' => $sort
+        ]);
+        \yii::info($req, 'dev');
+
+
         // order
         $sort = $order + 1; // +1刚刚对上
 
