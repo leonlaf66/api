@@ -35,6 +35,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
      */
     public function actionSearch($type = 'purchase', $q = '', $order = '0', $page = 1, $page_size = 15)
     {
+        $q = urldecode($q);
+        
         // filters
         $targetFilters = [];
         $filtersMap = include(__DIR__.'/../etc/filters.php');

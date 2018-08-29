@@ -10,7 +10,7 @@ return [
             $cityId = (new \yii\db\Query())
                 ->from('town')
                 ->select('id')
-                ->where(['short_name' => $cityId])
+                ->where(['short_name' => strtoupper($cityId)])
                 ->scalar();
         }
         return ['city_id', $cityId];
