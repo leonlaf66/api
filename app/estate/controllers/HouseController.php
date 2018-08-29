@@ -36,7 +36,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
     public function actionSearch($type = 'purchase', $q = '', $order = '0', $page = 1, $page_size = 15)
     {
         $q = urldecode($q);
-        
+
         // filters
         $targetFilters = [];
         $filtersMap = include(__DIR__.'/../etc/filters.php');
@@ -46,6 +46,9 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 $targetFilters[$targetField] = $targetVal;
             }
         }
+
+        // order
+        $sort = $order + 1; // +1刚刚对上
 
         // log
         $req = json_encode([
@@ -57,10 +60,6 @@ class HouseController extends \deepziyu\yii\rest\Controller
             'sort' => $sort
         ]);
         \yii::info($req, 'dev');
-
-
-        // order
-        $sort = $order + 1; // +1刚刚对上
 
         // 请求graphql服务
         $result = app('graphql')->request('search-houses', [
