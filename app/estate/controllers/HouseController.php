@@ -124,6 +124,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
             'filters' => $targetFilters
         ])->result;
 
+        $result->polygons = [];
+
         return $result;
     }
 
