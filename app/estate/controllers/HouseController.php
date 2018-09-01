@@ -186,8 +186,11 @@ class HouseController extends \deepziyu\yii\rest\Controller
 
         // detail
         $details = array_map(function ($group) {
-            $group->items = array_map(function ($item) {
-                $item->rawValue = $item->value;
+            foreach ($group->items as $id => $item) {
+                $item->id = $id;
+                $item->rawValue = $item->raw_value;
+                unset($item->raw_value);
+
                 $item->formatedValue = $item->value;
                 if (isset($item->prefix)) {
                     $item->formatedValue = $item->prefix . $item->formatedValue;
@@ -195,8 +198,8 @@ class HouseController extends \deepziyu\yii\rest\Controller
                 if (isset($item->suffix)) {
                     $item->formatedValue = $item->formatedValue . $item->suffix;
                 }
-                return $item;
-            }, (Array)$group->items);
+            }
+
             return $group;
         }, $house->details);
 
@@ -211,7 +214,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
             'no_full_baths' => FieldFilter::unknown($house->baths[0]),
             'no_half_baths' => FieldFilter::unknown($house->baths[1]),
             'square_feet' => FieldFilter::square($house->square_feet),
-            'est_sale' => FieldFilter::money($house->est_sale),
+            'est_sale' => $house->est_sale,
             'area' => FieldFilter::unknown($house->area),
             'status_name' => FieldFilter::statusName($house->status, $house->prop),
             'list_days_description' => FieldFilter::listDayDesc(round((time() - strtotime($house->date)) / 3600 / 24)),
