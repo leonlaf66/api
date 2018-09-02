@@ -15,6 +15,7 @@ class SubwayController extends \deepziyu\yii\rest\Controller
     public function actionMaps($area_id = 'ma')
     {
         if (\yii::$app->area->id !== 'ma') return [];
+        if ($area_id !=='ma') return [];
 
         $items = \models\SubwayStation::dictOptions();
 
