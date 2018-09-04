@@ -188,7 +188,7 @@ class HouseController extends \deepziyu\yii\rest\Controller
         $details = array_map(function ($group) {
             foreach ($group->items as $id => $item) {
                 $item->id = $id;
-                $item->rawValue = $item->raw_value;
+                $item->rawValue = $item->raw_value ?? $item->value;
                 unset($item->raw_value);
 
                 $item->formatedValue = $item->value;
