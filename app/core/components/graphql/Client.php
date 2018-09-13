@@ -28,7 +28,7 @@ class Client extends \yii\base\Component
             'app-token' => $this->appToken,
             'language' => \yii::$app->language,
             'area-id' => \WS::$app->area->id,
-            'ip-address' => \WS::$app->request->getUserHostAddress(),
+            'ip-address' => \WS::$app->request->userIP,
             'appid' => $appid
         ]);
 
