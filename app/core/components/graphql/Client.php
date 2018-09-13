@@ -17,10 +17,19 @@ class Client extends \yii\base\Component
 
     public function request($gqlId, $variables = [], $headers = [], $defValue = null)
     {
+        $appid = 'test';
+        if (strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strpos($_SERVER['HTTP_USER_AGENT'], 'iPad')){
+            $appid = 'ios';
+        } else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Android')){
+            $appid = 'android';
+        }
+
         $headers = array_merge($headers, [
             'app-token' => $this->appToken,
             'language' => \yii::$app->language,
-            'area-id' => \WS::$app->area->id
+            'area-id' => \WS::$app->area->id,
+            'ip-address' => \WS::$app->request->getUserHostAddress(),
+            'appid' => $appid
         ]);
 
         $query = $this->getGraphqlQuery($gqlId);
